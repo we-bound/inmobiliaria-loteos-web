@@ -19,10 +19,12 @@
 
 html {
  scroll-behavior: smooth;
+ overflow-x: hidden;
 }
 
 body {
  margin: 0;
+ overflow-x: hidden;
  background: var(--background);
  color: #0f172a;
  font-family: Aptos, 'Segoe UI', 'Trebuchet MS', sans-serif;
@@ -38,13 +40,16 @@ input,
 select,
 textarea {
  font: inherit;
+ transition: box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
-button,
-input,
-select,
-textarea {
- transition: box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
+img,
+svg,
+video,
+canvas,
+iframe {
+ display: block;
+ max-width: 100%;
 }
 
 button:focus-visible,

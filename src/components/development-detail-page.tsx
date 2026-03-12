@@ -66,9 +66,9 @@ export function DevelopmentDetailPage({ slug }: { slug: string }) {
  const primaryLabel = preferredLot && (preferredLot.status === 'reservado' || preferredLot.status === 'vendido') ? 'Avisame si aparece uno similar' : 'Ver precio y cuotas';
 
  return (
- <div data-testid={'development-detail-page'} className={'mx-auto max-w-[1100px] space-y-5'}>
+ <div data-testid={'development-detail-page'} className={'mx-auto min-w-0 max-w-[1100px] space-y-5'}>
  <section data-testid={'development-access-bar'} className={'rounded-[1.9rem] border border-slate-200/80 bg-white/90 px-5 py-4 shadow-[0_20px_40px_-32px_rgba(15,23,42,0.18)]'}>
- <div className={'flex items-center justify-between gap-4'}>
+ <div className={'flex flex-wrap items-center justify-between gap-4'}>
  <p className={'text-sm font-semibold uppercase tracking-[0.18em] text-slate-500'}>Acceso publico</p>
  <Link href={'/admin'} data-testid={'development-admin-link'} className={'inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Admin</Link>
  </div>
@@ -89,34 +89,34 @@ export function DevelopmentDetailPage({ slug }: { slug: string }) {
  </div>
  </section>
 
- <section className={'sticky top-20 z-20'}>
- <div className={'rounded-[2rem] border border-sky-100 bg-white/95 p-4 shadow-[0_28px_70px_-50px_rgba(15,23,42,0.24)] backdrop-blur'}>
- <div className={'grid gap-4 xl:grid-cols-[1.1fr_0.9fr]'}>
- <div className={'space-y-4'}>
+ <section className={'sticky top-[4.5rem] z-20 sm:top-20'}>
+ <div className={'rounded-[2rem] border border-sky-100 bg-white/95 p-4 shadow-[0_28px_70px_-50px_rgba(15,23,42,0.24)] backdrop-blur sm:p-5'}>
+ <div className={'grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]'}>
+ <div className={'min-w-0 space-y-4'}>
  <div className={'flex flex-wrap items-center gap-3'}>
  <span className={'rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-800'}>Resumen comercial</span>
  <span className={'text-sm text-slate-500'}>{filteredLots.length} lotes visibles en esta vista</span>
  </div>
- <div className={'grid gap-3 sm:grid-cols-3'}>
+ <div className={'grid gap-3 sm:grid-cols-2 xl:grid-cols-3'}>
  <div className={'rounded-[1.4rem] border border-slate-200 bg-slate-50 px-4 py-3'}><p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Disponibles</p><p className={'mt-2 text-lg font-semibold text-emerald-800'}>{availableCount}</p></div>
  <div className={'rounded-[1.4rem] border border-slate-200 bg-slate-50 px-4 py-3'}><p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Estado general</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{development.generalStatus}</p></div>
  <div className={'rounded-[1.4rem] border border-slate-200 bg-slate-50 px-4 py-3'}><p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Vista activa</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{view === 'mapa' ? 'Mapa interactivo' : 'Listado comercial'}</p></div>
  </div>
 
  <div className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 px-4 py-4'}>
- {selectedLot ? (<div className={'flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'}><div><p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>Lote seleccionado</p><div className={'mt-2 flex flex-wrap items-center gap-2'}><p className={'text-lg font-semibold text-slate-950'}>Lote {selectedLot.number}</p><StatusBadge status={selectedLot.status} /></div><p className={'mt-2 text-sm text-slate-600'}>{selectedLot.block} - {selectedLot.street} - {formatArea(selectedLot.area)}</p></div><div className={'text-left sm:text-right'}><p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Precio referencial</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{formatCurrency(selectedLot.price, selectedLot.currency)}</p></div></div>) : (<div><p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>Lote sugerido</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{preferredLot ? 'Lote ' + preferredLot.number : 'Selecciona un lote del plano o del listado'}</p><p className={'mt-2 text-sm text-slate-600'}>{preferredLot ? preferredLot.street + ' - ' + formatArea(preferredLot.area) : 'La vista se puede compartir con filtros activos.'}</p></div>)}
+ {selectedLot ? (<div className={'flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'}><div className={'min-w-0'}><p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>Lote seleccionado</p><div className={'mt-2 flex flex-wrap items-center gap-2'}><p className={'text-lg font-semibold text-slate-950'}>Lote {selectedLot.number}</p><StatusBadge status={selectedLot.status} /></div><p className={'mt-2 text-sm text-slate-600'}>{selectedLot.block} - {selectedLot.street} - {formatArea(selectedLot.area)}</p></div><div className={'text-left sm:text-right'}><p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Precio referencial</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{formatCurrency(selectedLot.price, selectedLot.currency)}</p></div></div>) : (<div className={'min-w-0'}><p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>Lote sugerido</p><p className={'mt-2 text-lg font-semibold text-slate-950'}>{preferredLot ? 'Lote ' + preferredLot.number : 'Selecciona un lote del plano o del listado'}</p><p className={'mt-2 text-sm text-slate-600'}>{preferredLot ? preferredLot.street + ' - ' + formatArea(preferredLot.area) : 'La vista se puede compartir con filtros activos.'}</p></div>)}
  </div>
  </div>
 
- <div className={'space-y-3'}>
+ <div className={'min-w-0 space-y-3'}>
  <div className={'grid gap-3 sm:grid-cols-2'}>
  <label className={'space-y-2'}><span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Estado</span><select data-testid={'detail-status-filter'} value={statusFilter} onChange={(event) => updateQuery({ estado: event.target.value, lote: null })} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}><option value={'all'}>Todos los estados</option><option value={'disponible'}>Disponible</option><option value={'consultado'}>Consultado</option><option value={'reservado'}>Reservado</option><option value={'vendido'}>Vendido</option></select></label>
  <div className={'space-y-2'}><span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Visualizacion</span><ViewToggle value={view} onChange={(nextView) => updateQuery({ vista: nextView })} /></div>
  </div>
 
  <div className={'flex flex-col gap-3 sm:flex-row'}>
- <button data-testid={'detail-primary-cta'} type={'button'} onClick={openPreferredLot} className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}>{primaryLabel}</button>
- <button data-testid={'detail-copy-view'} type={'button'} onClick={copyCurrentView} className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Copiar vista</button>
+ <button data-testid={'detail-primary-cta'} type={'button'} onClick={openPreferredLot} className={'inline-flex w-full items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d] sm:w-auto'}>{primaryLabel}</button>
+ <button data-testid={'detail-copy-view'} type={'button'} onClick={copyCurrentView} className={'inline-flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950 sm:w-auto'}>Copiar vista</button>
  </div>
  </div>
  </div>

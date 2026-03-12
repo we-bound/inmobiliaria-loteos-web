@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useState, useTransition } from 'react';
+import { FormEvent, useEffect, useRef, useState, useTransition } from 'react';
 
 import { useAppData } from '@/components/providers';
 import { cn, formatArea, formatCurrency, statusMeta } from '@/lib/format';
@@ -51,13 +51,28 @@ function selectLot(onSelectLot: (lot: Lot) => void, lot: Lot) {
 }
 
 export function SitePlanMap(props: { development: Development; selectedLotId?: string; filteredStatus: 'all' | LotStatus; onSelectLot: (lot: Lot) => void; }) {
+ const containerRef = useRef<HTMLDivElement | null>(null);
+ const [isCompactMap, setIsCompactMap] = useState(false);
  const availableCount = countByStatus(props.development, 'disponible');
  const consultedCount = countByStatus(props.development, 'consultado');
  const reservedCount = countByStatus(props.development, 'reservado');
  const soldCount = countByStatus(props.development, 'vendido');
 
+ useEffect(() => {
+ if (!containerRef.current || typeof ResizeObserver === 'undefined') {
+ return undefined;
+ }
+
+ const observer = new ResizeObserver(([entry]) => {
+ setIsCompactMap(entry.contentRect.width < 520);
+ });
+
+ observer.observe(containerRef.current);
+ return () => observer.disconnect();
+ }, []);
+
  return (
- <section data-testid={'site-plan-map'} className={'rounded-[2rem] border border-slate-200/80 bg-white p-4 shadow-[0_28px_70px_-48px_rgba(15,23,42,0.24)] sm:p-5'}>
+ <section data-testid={'site-plan-map'} className={'min-w-0 rounded-[2rem] border border-slate-200/80 bg-white p-4 shadow-[0_28px_70px_-48px_rgba(15,23,42,0.24)] sm:p-5'}>
  <div className={'mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'}>
  <div>
  <p className={'text-sm font-semibold text-slate-900'}>Plano interactivo del loteo</p>
@@ -72,29 +87,32 @@ export function SitePlanMap(props: { development: Development; selectedLotId?: s
  </div>
 
  <div className={'rounded-[1.75rem] border border-slate-200 bg-[#eff4fb] p-3 sm:p-4'}>
- <div className={'overflow-x-auto'}>
- <svg data-testid={'site-plan-svg'} viewBox={props.development.siteMap.viewBox} role={'img'} aria-label={'Plano de ' + props.development.name} className={'h-auto min-w-[720px] w-full'}>
+ <div className={'overflow-hidden'}>
+ <div ref={containerRef} className={'mx-auto aspect-[846/1020] w-full max-w-[860px] overflow-hidden rounded-[1.4rem]'}>
+ <svg data-testid={'site-plan-svg'} viewBox={props.development.siteMap.viewBox} role={'img'} aria-label={'Plano de ' + props.development.name} preserveAspectRatio={'xMidYMid meet'} className={'h-full w-full'}>
  <rect x={18} y={18} width={810} height={970} rx={18} className={'fill-transparent stroke-slate-300'} />
  {props.development.siteMap.elements.map((element) => (
  <g key={element.id}>
  <rect x={element.x} y={element.y} width={element.width} height={element.height} rx={element.type === 'street' ? 12 : 18} className={element.type === 'street' ? 'fill-slate-200 stroke-slate-200' : element.type === 'green' ? 'fill-emerald-200 stroke-emerald-400' : 'fill-sky-100 stroke-sky-200'} />
- {element.label ? <text x={element.labelX || element.x + element.width / 2} y={element.labelY || element.y + element.height / 2} textAnchor={'middle'} className={'fill-slate-700 text-[15px] font-semibold tracking-[0.04em]'}>{element.label}</text> : null}
+ {element.label ? <text x={element.labelX || element.x + element.width / 2} y={element.labelY || element.y + element.height / 2} textAnchor={'middle'} className={cn('fill-slate-700 font-semibold tracking-[0.04em]', isCompactMap ? 'text-[12px]' : 'text-[15px]')}>{element.label}</text> : null}
  </g>
  ))}
 
  {props.development.lots.map((lot) => {
  const selected = props.selectedLotId === lot.id;
  const filteredOut = props.filteredStatus !== 'all' && lot.status !== props.filteredStatus;
+ const handleSelect = () => selectLot(props.onSelectLot, lot);
 
  return (
- <g key={lot.id} data-testid={'site-plan-lot-' + lot.lotCode} role={'button'} tabIndex={0} className={'cursor-pointer'} onClick={() => selectLot(props.onSelectLot, lot)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selectLot(props.onSelectLot, lot); } }}>
- <rect x={lot.mapPosition.x} y={lot.mapPosition.y} width={lot.mapPosition.width} height={lot.mapPosition.height} rx={12} className={cn('stroke-[2.5] transition duration-200', statusMeta[lot.status].mapClass, filteredOut ? 'opacity-30' : selected ? 'opacity-100 drop-shadow-md' : 'opacity-95 hover:opacity-100')} />
+ <g key={lot.id} data-testid={'site-plan-lot-' + lot.lotCode} role={'button'} tabIndex={0} className={'cursor-pointer'} style={{ touchAction: 'manipulation' }} onClick={handleSelect} onPointerUp={(event) => { if (event.pointerType !== 'mouse') { handleSelect(); } }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleSelect(); } }}>
+ <rect data-testid={'site-plan-lot-hit-' + lot.lotCode} x={lot.mapPosition.x} y={lot.mapPosition.y} width={lot.mapPosition.width} height={lot.mapPosition.height} rx={12} className={cn('stroke-[2.5] transition duration-200', statusMeta[lot.status].mapClass, filteredOut ? 'opacity-30' : selected ? 'opacity-100 drop-shadow-md' : 'opacity-95 hover:opacity-100')} />
  {selected ? <rect x={lot.mapPosition.x - 3} y={lot.mapPosition.y - 3} width={lot.mapPosition.width + 6} height={lot.mapPosition.height + 6} rx={14} className={'fill-transparent stroke-slate-950 stroke-[3]'} /> : null}
- <text x={lot.mapPosition.x + lot.mapPosition.width / 2} y={lot.mapPosition.y + lot.mapPosition.height / 2 + 7} textAnchor={'middle'} className={'pointer-events-none fill-slate-950 text-[17px] font-semibold'}>{lot.number}</text>
+ <text x={lot.mapPosition.x + lot.mapPosition.width / 2} y={lot.mapPosition.y + lot.mapPosition.height / 2 + (isCompactMap ? 5 : 7)} textAnchor={'middle'} className={cn('pointer-events-none fill-slate-950 font-semibold', isCompactMap ? 'text-[14px]' : 'text-[17px]')}>{lot.number}</text>
  </g>
  );
  })}
  </svg>
+ </div>
  </div>
  </div>
 
@@ -209,7 +227,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  return (
  <div className={'fixed inset-0 z-[70] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-sm md:items-center md:justify-end md:p-6'}>
  <button aria-label={'Cerrar'} className={'absolute inset-0'} onClick={onClose} />
- <div data-testid={'lot-detail-sheet'} className={'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-white p-5 shadow-2xl md:mr-4 md:h-[calc(100vh-7rem)] md:max-h-[840px] md:max-w-[560px] md:rounded-[2rem] md:p-6'}>
+ <div data-testid={'lot-detail-sheet'} className={'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-white p-4 shadow-2xl sm:p-5 md:mr-4 md:h-[calc(100vh-7rem)] md:max-h-[840px] md:max-w-[560px] md:rounded-[2rem] md:p-6'}>
  <div className={'mb-5 flex items-start justify-between gap-4'}>
  <div>
  <p className={'text-sm font-semibold uppercase tracking-[0.18em] text-slate-400'}>{development.name}</p>
@@ -235,7 +253,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  </div>
  </div>
 
- <div className={'mt-5 grid gap-3 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 sm:grid-cols-2'}>
+ <div className={'mt-5 grid gap-3 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2 sm:p-5'}>
  <Info label={'Manzana'} value={lot.block} />
  <Info label={'Calle'} value={lot.street} />
  <Info label={'Superficie'} value={formatArea(lot.area)} />
@@ -248,7 +266,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  <InquiryForm key={lot.lotCode + '-' + (isAlertFlow ? 'alerta' : 'lote')} development={development} lot={lot} source={isAlertFlow ? 'alerta' : 'lote'} submitLabel={submitLabel} description={description} />
  </div>
 
- <a data-testid={'lot-whatsapp-cta'} href={whatsappLink} target={'_blank'} rel={'noopener noreferrer'} className={'mt-4 inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Consultar este lote por WhatsApp</a>
+ <a data-testid={'lot-whatsapp-cta'} href={whatsappLink} target={'_blank'} rel={'noopener noreferrer'} className={'mt-4 inline-flex w-full items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Consultar este lote por WhatsApp</a>
  </div>
  </div>
  );

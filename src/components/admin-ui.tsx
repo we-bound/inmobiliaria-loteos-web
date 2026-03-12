@@ -53,7 +53,7 @@ export function LotsTable(props: { developments: Development[]; selectedDevelopm
  .filter((row) => props.selectedStatus === 'all' || row.lot.status === props.selectedStatus);
 
  return (
- <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
+ <section className={'min-w-0 rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'}>
  <div>
  <h3 className={'text-xl font-semibold text-slate-950'}>Lotes</h3>
@@ -74,13 +74,13 @@ export function LotsTable(props: { developments: Development[]; selectedDevelopm
  </div>
  </div>
 
- <div className={'mb-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600'}>
+ <div className={'mb-4 flex flex-col gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between'}>
  <span>{rows.length} lotes visibles con los filtros actuales.</span>
  <span>Los cambios impactan mapa, lista y detalle en esta sesion.</span>
  </div>
 
- <div className={'overflow-x-auto'}>
- <table data-testid={'admin-lots-table'} className={'min-w-[1080px] w-full text-left text-sm'}>
+ <div className={'-mx-5 overflow-x-auto px-5'}>
+ <table data-testid={'admin-lots-table'} className={'w-full min-w-[960px] text-left text-sm'}>
  <thead>
  <tr className={'border-b border-slate-200 text-slate-500'}>
  <th className={'pb-3'}>Loteo</th>
@@ -124,13 +124,13 @@ export function LotsTable(props: { developments: Development[]; selectedDevelopm
 
 export function LeadsTable({ leads }: { leads: Lead[] }) {
  return (
- <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
+ <section className={'min-w-0 rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'mb-5'}>
  <h3 className={'text-xl font-semibold text-slate-950'}>Leads y alertas</h3>
  <p className={'text-sm text-slate-500'}>Consultas publicas y alertas comerciales guardadas localmente para seguimiento del equipo.</p>
  </div>
- <div className={'overflow-x-auto'}>
- <table data-testid={'admin-leads-table'} className={'min-w-[860px] w-full text-left text-sm'}>
+ <div className={'-mx-5 overflow-x-auto px-5'}>
+ <table data-testid={'admin-leads-table'} className={'w-full min-w-[760px] text-left text-sm'}>
  <thead>
  <tr className={'border-b border-slate-200 text-slate-500'}>
  <th className={'pb-3'}>Fecha</th>

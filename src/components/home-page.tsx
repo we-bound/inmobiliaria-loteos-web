@@ -9,7 +9,7 @@ export function HomePage() {
  const { developments } = useAppData();
 
  return (
- <div data-testid={'home-page'} className={'space-y-12'}>
+ <div data-testid={'home-page'} className={'min-w-0 space-y-12'}>
  <Hero developments={developments} />
 
  <section className={'space-y-6'}>
@@ -21,7 +21,7 @@ export function HomePage() {
  <Link href={'/loteos'} className={'inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Ver todos los loteos</Link>
  </div>
 
- <div data-testid={'featured-developments'} className={'grid gap-6 xl:grid-cols-3'}>
+ <div data-testid={'featured-developments'} className={'grid gap-6 md:grid-cols-2 xl:grid-cols-3'}>
  {developments.map((development) => (<LoteoCard key={development.slug} development={development} />))}
  </div>
  </section>

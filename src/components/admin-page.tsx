@@ -25,7 +25,7 @@ export function AdminPage() {
  ];
 
  return (
- <div data-testid={'admin-page'} className={'space-y-8'}>
+ <div data-testid={'admin-page'} className={'min-w-0 space-y-8'}>
  <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between'}>
  <div className={'max-w-3xl'}>
@@ -61,7 +61,7 @@ export function AdminPage() {
  <div data-testid={'admin-panel-view'} className={'space-y-8'}>
  <section className={'grid gap-6 xl:grid-cols-[0.35fr_0.65fr]'}>
  <AdminSidebar />
- <div className={'space-y-6'}>
+ <div className={'min-w-0 space-y-6'}>
  <div>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Operacion</p>
  <h2 className={'mt-3 text-3xl font-semibold text-slate-950'}>Disponibilidad, alertas y leads sincronizados</h2>

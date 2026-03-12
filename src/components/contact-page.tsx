@@ -4,7 +4,7 @@ import { InquiryForm } from '@/components/lot-interactions';
 
 export function ContactPage() {
  return (
- <div data-testid={'contact-page'} className={'grid gap-8 lg:grid-cols-[0.9fr_1.1fr]'}>
+ <div data-testid={'contact-page'} className={'min-w-0 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]'}>
  <section className={'rounded-[2rem] border border-white/80 bg-white p-6 shadow-[0_32px_70px_-48px_rgba(15,23,42,0.28)]'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Contacto</p>
  <h1 className={'mt-3 text-4xl font-semibold text-slate-950'}>Hablemos de tu proximo lote.</h1>

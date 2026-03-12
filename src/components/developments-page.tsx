@@ -75,7 +75,7 @@ export function DevelopmentsPage() {
  }, [developments, location, search, status, surface]);
 
  return (
- <div data-testid={'developments-page'} className={'space-y-8'}>
+ <div data-testid={'developments-page'} className={'min-w-0 space-y-8'}>
  <section className={'space-y-3'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Listado general</p>
  <h1 className={'text-4xl font-semibold text-slate-950'}>Loteos disponibles</h1>
@@ -94,7 +94,7 @@ export function DevelopmentsPage() {
  onSurface={(value) => updateQuery({ surface: value })}
  />
 
- <section data-testid={'developments-grid'} className={'grid gap-6 xl:grid-cols-3'}>
+ <section data-testid={'developments-grid'} className={'grid gap-6 md:grid-cols-2 xl:grid-cols-3'}>
  {filtered.map((development) => (<LoteoCard key={development.slug} development={development} />))}
  </section>
 
