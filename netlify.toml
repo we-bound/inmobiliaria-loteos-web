@@ -4,5 +4,5 @@ command = "npm run build"
 [build.environment]
 NODE_VERSION = "22"
 
-[[plugins]]
-package = "@netlify/plugin-nextjs"
+# Intencionalmente no definimos publish. Para Next.js en Netlify
+# el runtime/adaptador se encarga de la salida automaticamente.
