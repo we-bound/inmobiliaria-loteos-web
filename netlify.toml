@@ -1,8 +1,6 @@
 [build]
 command = "npm run build"
+publish = ".netlify/next"
 
 [build.environment]
 NODE_VERSION = "22"
-
-# Intencionalmente no definimos publish. Para Next.js en Netlify
-# el runtime/adaptador se encarga de la salida automaticamente.

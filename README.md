@@ -2,18 +2,19 @@
 
 ## Deploy en Netlify
 
-Este proyecto usa Next.js y debe desplegarse en Netlify con el runtime/adaptador de Next.js de Netlify, sin definir manualmente un publish directory.
+Este proyecto usa Next.js y esta preparado para desplegarse en Netlify con el runtime/plugin de Next.js.
 
 ### Settings recomendados en Netlify
 
 - Base directory: dejar vacio
 - Build command: `npm run build`
-- Publish directory: dejar vacio
+- Publish directory: `.netlify/next`
 
 Notas:
 
 - No usar `/`, `.` ni `.next` como publish directory.
-- Si el sitio ya tenia un publish directory configurado en el dashboard, borrarlo antes de redeployar.
+- Si el sitio ya tenia `Publish directory` vacio y el plugin de Next esta activo, Netlify puede intentar publicar la raiz del repo y fallar.
+- `netlify.toml` ya fija `publish = ".netlify/next"` para evitar ese problema y mantener el deploy consistente.
 - Para la primera demo, la app funciona con mocks locales y no necesita credenciales de Airtable.
 
 ### Validacion local
