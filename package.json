@@ -4,30 +4,31 @@
  "private": true,
  "description": "Mock web inmobiliaria para mostrar loteos, lotes y captacion de leads.",
  "scripts": {
- "dev": "next dev --webpack",
- "dev:turbo": "node scripts/clean-next-cache.mjs && next dev --turbopack",
- "clean:next": "node scripts/clean-next-cache.mjs",
- "build": "next build",
- "start": "next start",
- "lint": "eslint .",
- "qa:ui": "playwright test",
- "qa:shots": "playwright test --update-snapshots",
- "qa:report": "playwright show-report"
+  "dev": "next dev --webpack",
+  "dev:turbo": "node scripts/clean-next-cache.mjs && next dev --turbopack",
+  "clean:next": "node scripts/clean-next-cache.mjs",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint .",
+  "qa:ui": "playwright test",
+  "qa:shots": "playwright test --update-snapshots",
+  "qa:report": "playwright show-report"
  },
  "dependencies": {
- "next": "^16.1.6",
- "react": "^19.2.4",
- "react-dom": "^19.2.4"
+  "next": "^16.1.6",
+  "react": "^19.2.4",
+  "react-dom": "^19.2.4"
  },
  "devDependencies": {
- "@playwright/test": "^1.58.2",
- "@tailwindcss/postcss": "^4.2.1",
- "@types/node": "^25.3.5",
- "@types/react": "^19.2.14",
- "@types/react-dom": "^19.2.3",
- "eslint": "^9.39.4",
- "eslint-config-next": "^16.1.6",
- "tailwindcss": "^4.2.1",
- "typescript": "^5.9.3"
+  "@netlify/plugin-nextjs": "^5.15.9",
+  "@playwright/test": "^1.58.2",
+  "@tailwindcss/postcss": "^4.2.1",
+  "@types/node": "^25.3.5",
+  "@types/react": "^19.2.14",
+  "@types/react-dom": "^19.2.3",
+  "eslint": "^9.39.4",
+  "eslint-config-next": "^16.1.6",
+  "tailwindcss": "^4.2.1",
+  "typescript": "^5.9.3"
  }
 }
