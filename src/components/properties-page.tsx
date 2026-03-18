@@ -54,9 +54,9 @@ export function PropertiesPage() {
  <section className={'rounded-[2.2rem] border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(15,76,129,0.1),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_28%),linear-gradient(145deg,#ffffff,#f5f9fd)] px-6 py-8 shadow-[0_30px_70px_-48px_rgba(15,23,42,0.28)] sm:px-8'}>
  <div className={'grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-end'}>
  <div>
- <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Demo comercial de propiedades</p>
- <h1 className={'mt-3 text-4xl font-semibold text-slate-950 sm:text-5xl'}>Propiedades para alquiler y venta</h1>
- <p className={'mt-4 max-w-3xl text-lg leading-8 text-slate-600'}>Esta demo muestra cómo podría verse tu catálogo de casas, departamentos y cabañas con grilla clara, ficha rápida, precio opcional y contacto inmediato por WhatsApp o solicitud de contacto.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Catálogo de propiedades</p>
+ <h1 className={'mt-3 text-4xl font-semibold text-slate-950 sm:text-5xl'}>Alquileres y ventas con lectura clara</h1>
+ <p className={'mt-4 max-w-3xl text-lg leading-8 text-slate-600'}>Una selección de casas, departamentos y cabañas con ficha rápida, precio opcional y contacto inmediato para acompañar cada consulta comercial.</p>
  </div>
  <div className={'grid gap-3 sm:grid-cols-3'}>
  <div className={'rounded-[1.6rem] border border-white/90 bg-white/90 p-4 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.2)]'}>
@@ -77,19 +77,19 @@ export function PropertiesPage() {
 
  <section data-testid={'properties-demo-guide'} className={'grid gap-4 rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.18)] lg:grid-cols-3'}>
  <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
- <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>1. Explorá</p>
- <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Filtrá con lectura simple</h2>
- <p className={'mt-2 text-sm leading-7 text-slate-600'}>Buscá por ubicación, operación o tipo para mostrar rápido alquileres y ventas según la necesidad del cliente.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Selección curada</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Filtrá por operación, tipo y ubicación</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>La grilla prioriza lectura rápida para encontrar oportunidades de alquiler y venta según cada búsqueda.</p>
  </article>
  <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
- <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>2. Presentá</p>
- <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Abrí una ficha clara y comercial</h2>
- <p className={'mt-2 text-sm leading-7 text-slate-600'}>Cada propiedad tiene galería, superficie, estado y precio visible u oculto según cómo quieras mostrar la publicación.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Presentación flexible</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Mostrá valor o derivá la consulta</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>Cada propiedad puede publicar precio o invitar a consultar, manteniendo siempre una ficha prolija y clara.</p>
  </article>
  <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
- <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>3. Convertí</p>
- <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Dejá dos caminos de contacto</h2>
- <p className={'mt-2 text-sm leading-7 text-slate-600'}>El interesado puede escribir por WhatsApp o pedir contacto para que el equipo responda por llamada, email o mensaje.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Contacto ágil</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Convertí desde la misma ficha</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>WhatsApp y solicitud de contacto conviven en un flujo simple para no perder oportunidades.</p>
  </article>
  </section>
 

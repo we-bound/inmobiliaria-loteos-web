@@ -34,9 +34,9 @@ export function AdminPage() {
  <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between'}>
  <div className={'max-w-3xl'}>
- <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Admin mock</p>
- <h1 className={'mt-3 text-4xl font-semibold text-slate-950'}>Panel comercial simple para la demo</h1>
- <p className={'mt-3 text-lg leading-8 text-slate-600'}>Separá loteos y propiedades en dashboards distintos para que el cliente entienda rápido cómo se administran disponibilidades, publicaciones y leads.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Panel comercial</p>
+ <h1 className={'mt-3 text-4xl font-semibold text-slate-950'}>Operación unificada para loteos y propiedades</h1>
+ <p className={'mt-3 text-lg leading-8 text-slate-600'}>Un panel claro para administrar disponibilidades, publicaciones y leads con lectura rápida para el equipo comercial.</p>
  </div>
 
  <div className={'grid gap-2 rounded-[1.6rem] border border-slate-200 bg-slate-50 p-2 sm:grid-cols-2' + (airtableIntegrationEnabled ? ' lg:grid-cols-3' : '')}>

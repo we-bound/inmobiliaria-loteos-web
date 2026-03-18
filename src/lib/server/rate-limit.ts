@@ -8,11 +8,11 @@ interface RateLimitOptions {
  windowMs: number;
 }
 
-const globalStore = globalThis as typeof globalThis & { __pradosRateLimitStore?: Map<string, RateLimitState> };
-const store = globalStore.__pradosRateLimitStore ?? new Map<string, RateLimitState>();
+const globalStore = globalThis as typeof globalThis & { __catalogRateLimitStore?: Map<string, RateLimitState> };
+const store = globalStore.__catalogRateLimitStore ?? new Map<string, RateLimitState>();
 
-if (!globalStore.__pradosRateLimitStore) {
- globalStore.__pradosRateLimitStore = store;
+if (!globalStore.__catalogRateLimitStore) {
+ globalStore.__catalogRateLimitStore = store;
 }
 
 function cleanup(now: number) {

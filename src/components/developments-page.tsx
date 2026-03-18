@@ -78,8 +78,8 @@ export function DevelopmentsPage() {
  <div data-testid={'developments-page'} className={'min-w-0 space-y-8'}>
  <section className={'space-y-3'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Listado general</p>
- <h1 className={'text-4xl font-semibold text-slate-950'}>Loteos disponibles</h1>
- <p className={'max-w-3xl text-lg leading-8 text-slate-600'}>Filtra por ubicacion, estado y rango de superficie para encontrar rapido el desarrollo adecuado y compartir una vista concreta del listado.</p>
+ <h1 className={'text-4xl font-semibold text-slate-950'}>Loteos y desarrollos disponibles</h1>
+ <p className={'max-w-3xl text-lg leading-8 text-slate-600'}>Filtrá por ubicación, estado y rango de superficie para encontrar rápido el desarrollo adecuado y compartir una vista concreta del listado.</p>
  </section>
 
  <FilterBar
@@ -103,10 +103,10 @@ export function DevelopmentsPage() {
  <div>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Sin coincidencias</p>
  <h2 className={'mt-3 text-2xl font-semibold text-slate-950'}>No encontramos loteos con esos filtros.</h2>
- <p className={'mt-3 text-sm leading-7 text-slate-600'}>Dejanos tus datos y te avisamos cuando aparezca una opcion similar o cuando tengamos novedades comerciales que encajen con tu busqueda.</p>
+ <p className={'mt-3 text-sm leading-7 text-slate-600'}>Dejanos tus datos y te avisamos cuando aparezca una opción similar o cuando tengamos novedades comerciales que encajen con tu búsqueda.</p>
  </div>
  <div className={'rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5'}>
- <InquiryForm source={'alerta'} submitLabel={'Recibir alertas'} description={'Te avisamos cuando aparezcan loteos o lotes con caracteristicas parecidas a esta busqueda.'} />
+ <InquiryForm source={'alerta'} submitLabel={'Recibir alertas'} description={'Te avisamos cuando aparezcan loteos o lotes con características parecidas a esta búsqueda.'} />
  </div>
  </div>
  ) : null}

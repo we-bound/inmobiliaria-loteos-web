@@ -12,7 +12,7 @@ export function AdminSidebar() {
  <div className={'mt-6 space-y-3 text-sm text-slate-600'}>
  <div className={'rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3'}>Disponibilidad sincronizada con mapa, lista y detalle del lote.</div>
  <div className={'rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3'}>Condiciones editables para presentar precio, anticipo y cuotas.</div>
- <div className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3'}>Alertas y consultas visibles para seguimiento inmediato en esta demo.</div>
+ <div className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3'}>Alertas y consultas visibles para seguimiento inmediato del equipo.</div>
  </div>
  </aside>
  );
@@ -57,7 +57,7 @@ export function LotsTable(props: { developments: Development[]; selectedDevelopm
  <div className={'mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'}>
  <div>
  <h3 className={'text-xl font-semibold text-slate-950'}>Lotes</h3>
- <p className={'text-sm text-slate-500'}>Edición visual en memoria para demostrar actualización de estados y condiciones sin fricción.</p>
+ <p className={'text-sm text-slate-500'}>Edición visual en memoria para ajustar estados y condiciones con impacto inmediato en la sesión.</p>
  </div>
  <div className={'grid gap-3 sm:grid-cols-2'}>
  <select data-testid={'admin-filter-development'} value={props.selectedDevelopment} onChange={(event) => props.onChangeDevelopment(event.target.value)} className={'rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>

@@ -1,6 +1,7 @@
 import { Development, Lot, Property } from '@/types';
+import { siteConfig } from '@/lib/site-config';
 
-const WHATSAPP_NUMBER = '5493515550101';
+const WHATSAPP_NUMBER = siteConfig.contact.whatsappNumber;
 
 export function buildWhatsAppLink(development?: Development, lot?: Lot, name?: string) {
  const parts = [

@@ -152,7 +152,7 @@ export function AdminPropertiesPanel(props: { leads: Lead[] }) {
  }, [availability, operation, properties, search, type]);
 
  async function handleDelete(property: Property) {
- const confirmed = window.confirm('Vas a quitar "' + property.title + '" del catálogo mock. ¿Continuar?');
+ const confirmed = window.confirm('Vas a quitar "' + property.title + '" del catálogo actual. ¿Continuar?');
 
  if (!confirmed) {
  return;
@@ -174,7 +174,7 @@ export function AdminPropertiesPanel(props: { leads: Lead[] }) {
  <div>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Dashboard de propiedades</p>
  <h2 className={'mt-3 text-3xl font-semibold text-slate-950'}>Alquileres y ventas con carga simple</h2>
- <p className={'mt-3 text-lg leading-8 text-slate-600'}>Esta sección de la demo muestra cómo cargar propiedades, decidir si se publica el precio, elegir portada y recibir leads por WhatsApp o solicitud de contacto.</p>
+ <p className={'mt-3 text-lg leading-8 text-slate-600'}>Una vista preparada para cargar propiedades, decidir si se publica el precio, elegir portada y ordenar leads de manera clara.</p>
  </div>
  <div className={'grid gap-3 sm:grid-cols-3'}>
  <div className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-600'}>
@@ -236,11 +236,11 @@ export function AdminPropertiesPanel(props: { leads: Lead[] }) {
 
  <div className={'mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3'}>
  {filteredProperties.map((property) => (
- <article key={property.id} data-testid={'admin-property-card-' + property.id} className={'overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_18px_40px_-34px_rgba(15,23,42,0.18)]'}>
+ <article key={property.id} data-testid={'admin-property-card-' + property.id} className={'flex h-full flex-col overflow-hidden rounded-[1.8rem] border border-slate-200 bg-white shadow-[0_18px_40px_-34px_rgba(15,23,42,0.18)]'}>
  <div className={'aspect-[4/3] overflow-hidden bg-slate-100'}>
  <img src={mainImage(property)?.url} alt={mainImage(property)?.alt || property.title} className={'h-full w-full object-cover'} />
  </div>
- <div className={'space-y-4 p-5'}>
+ <div className={'flex flex-1 flex-col gap-4 p-5'}>
  <div className={'flex flex-wrap items-center gap-2'}>
  <PropertyOperationBadge operation={property.operation} />
  <PropertyStatusBadge property={property} />
@@ -260,11 +260,11 @@ export function AdminPropertiesPanel(props: { leads: Lead[] }) {
  <p className={'mt-2 font-semibold text-slate-950'}>{formatPropertyPrice(property)}</p>
  </div>
  </div>
- <div className={'flex flex-col gap-3 sm:flex-row'}>
- <button data-testid={'admin-property-edit-' + property.id} type={'button'} onClick={() => { setEditingProperty(property); setEditorOpen(true); }} className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}>
+ <div className={'mt-auto grid gap-3 sm:grid-cols-2'}>
+ <button data-testid={'admin-property-edit-' + property.id} type={'button'} onClick={() => { setEditingProperty(property); setEditorOpen(true); }} className={'inline-flex min-h-[3.15rem] items-center justify-center rounded-[1.3rem] bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}>
  Editar
  </button>
- <button data-testid={'admin-property-delete-' + property.id} type={'button'} onClick={() => void handleDelete(property)} className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>
+ <button data-testid={'admin-property-delete-' + property.id} type={'button'} onClick={() => void handleDelete(property)} className={'inline-flex min-h-[3.15rem] items-center justify-center rounded-[1.3rem] border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>
  Quitar
  </button>
  </div>

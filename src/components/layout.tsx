@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { siteConfig } from '@/lib/site-config';
+
 const navItems = [
  { href: '/', label: 'Inicio', testId: 'nav-link-inicio' },
  { href: '/loteos', label: 'Loteos', testId: 'nav-link-loteos' },
@@ -19,12 +21,12 @@ export function Navbar() {
  <header data-testid={'site-header'} className={'sticky top-0 z-50 border-b border-white/70 bg-[rgba(248,250,252,0.9)] backdrop-blur-xl'}>
  <div className={'mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8'}>
  <Link href={'/'} data-testid={'brand-link'} className={'flex items-center gap-3'}>
- <div className={'flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#0f4c81,#1e88a8)] text-sm font-semibold text-white shadow-lg shadow-sky-900/10'}>
- PS
+ <div className={'flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#163c6b,#2f7ea3)] text-sm font-semibold text-white shadow-lg shadow-sky-900/10'}>
+ {siteConfig.brand.monogram}
  </div>
  <div>
- <p className={'font-semibold uppercase tracking-[0.16em] text-slate-500'}>Prados del Sur</p>
- <p className={'text-sm text-slate-700'}>Desarrollos inmobiliarios</p>
+ <p className={'font-semibold uppercase tracking-[0.16em] text-slate-500'}>{siteConfig.brand.name}</p>
+ <p className={'text-sm text-slate-700'}>{siteConfig.brand.tagline}</p>
  </div>
  </Link>
 
@@ -34,7 +36,7 @@ export function Navbar() {
  </span>
  <a
  data-testid={'header-whatsapp-cta-mobile'}
- href={'https://wa.me/5493515550101?text=Hola%2C%20quiero%20consultar%20por%20loteos%20disponibles.'}
+ href={'https://wa.me/' + siteConfig.contact.whatsappNumber + '?text=' + encodeURIComponent(siteConfig.contact.whatsappIntro)}
  target={'_blank'}
  rel={'noopener noreferrer'}
  className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0b3f6d]'}
@@ -62,7 +64,7 @@ export function Navbar() {
 
  <a
  data-testid={'header-whatsapp-cta'}
- href={'https://wa.me/5493515550101?text=Hola%2C%20quiero%20consultar%20por%20loteos%20disponibles.'}
+ href={'https://wa.me/' + siteConfig.contact.whatsappNumber + '?text=' + encodeURIComponent(siteConfig.contact.whatsappIntro)}
  target={'_blank'}
  rel={'noopener noreferrer'}
  className={'hidden items-center justify-center rounded-full bg-[#0f4c81] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0b3f6d] md:inline-flex'}
@@ -79,13 +81,13 @@ export function Footer() {
  <footer className={'border-t border-slate-200/80 bg-white/85'}>
  <div className={'mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 text-sm text-slate-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8'}>
  <div>
- <p className={'font-semibold text-slate-900'}>Prados del Sur Desarrollos</p>
- <p>Mock comercial para mostrar loteos, disponibilidad y captura de interesados.</p>
+ <p className={'font-semibold text-slate-900'}>{siteConfig.brand.legalName}</p>
+ <p>{siteConfig.brand.description}</p>
  </div>
  <div className={'flex flex-col gap-1 text-left lg:text-right'}>
- <p>Av. Recta Martinolli 7821, Cordoba</p>
- <p>ventas@pradosdelsur.com.ar</p>
- <p>+54 9 351 555 0101</p>
+ <p>{siteConfig.contact.address}</p>
+ <p>{siteConfig.contact.email}</p>
+ <p>{siteConfig.contact.phoneDisplay}</p>
  </div>
  </div>
  </footer>

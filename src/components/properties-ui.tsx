@@ -98,32 +98,33 @@ export function PropertyCard(props: {
  const image = primaryImage(props.property);
 
  return (
- <article data-testid={'property-card-' + props.property.slug} className={'group min-w-0 overflow-hidden rounded-[2rem] border border-white/90 bg-white shadow-[0_30px_70px_-48px_rgba(15,23,42,0.24)]'}>
+ <article data-testid={'property-card-' + props.property.slug} className={'group flex h-full min-w-0 flex-col overflow-hidden rounded-[2rem] border border-white/90 bg-white shadow-[0_30px_70px_-48px_rgba(15,23,42,0.24)] transition hover:-translate-y-1 hover:shadow-[0_38px_82px_-50px_rgba(15,23,42,0.26)]'}>
  <div className={'relative aspect-[4/3] overflow-hidden bg-slate-100'}>
  <img src={image?.url} alt={image?.alt || props.property.title} className={'h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]'} />
+ <div className={'absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.04),transparent_40%,rgba(15,23,42,0.12))]'} />
  <div className={'absolute inset-x-4 top-4 flex flex-wrap gap-2'}>
  <PropertyOperationBadge operation={props.property.operation} />
  <PropertyStatusBadge property={props.property} />
  </div>
  </div>
 
- <div className={'space-y-4 p-5'}>
- <div className={'space-y-2'}>
+ <div className={'flex flex-1 flex-col gap-5 p-6'}>
+ <div className={'space-y-3'}>
  <div className={'flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>
  <span>{propertyTypeMeta[props.property.type].label}</span>
  <span className={'h-1 w-1 rounded-full bg-slate-300'} />
  <span>{props.property.location}</span>
  </div>
- <h3 className={'text-xl font-semibold text-slate-950'}>{props.property.title}</h3>
- <p className={'text-sm leading-6 text-slate-600'}>{props.property.shortDescription}</p>
+ <h3 className={'text-[1.75rem] font-semibold leading-tight text-slate-950'}>{props.property.title}</h3>
+ <p className={'text-sm leading-7 text-slate-600'}>{props.property.shortDescription}</p>
  </div>
 
  <div className={'grid grid-cols-2 gap-3 text-sm text-slate-600'}>
- <div className={'rounded-2xl bg-slate-50 px-4 py-3'}>
+ <div className={'rounded-[1.35rem] bg-slate-50 px-4 py-4'}>
  <p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>Superficie</p>
  <p className={'mt-2 font-semibold text-slate-950'}>{formatArea(props.property.surfaceM2)}</p>
  </div>
- <div className={'rounded-2xl bg-slate-50 px-4 py-3'}>
+ <div className={'rounded-[1.35rem] bg-slate-50 px-4 py-4'}>
  <p className={'text-xs uppercase tracking-[0.18em] text-slate-400'}>{props.property.showPrice ? 'Precio' : 'Valor'}</p>
  <p className={'mt-2 font-semibold text-slate-950'}>{propertyPriceLabel(props.property)}</p>
  </div>
@@ -135,12 +136,12 @@ export function PropertyCard(props: {
  {props.property.parking ? <span className={'rounded-full bg-slate-100 px-3 py-1'}>Cochera</span> : null}
  </div>
 
- <div className={'flex flex-col gap-3 sm:flex-row'}>
+ <div className={'mt-auto grid gap-3 sm:grid-cols-2'}>
  {props.href ? (
  <Link
  href={props.href}
  data-testid={'property-open-' + props.property.slug}
- className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
+ className={'inline-flex min-h-[3.35rem] items-center justify-center rounded-[1.4rem] bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
  >
  Ver propiedad
  </Link>
@@ -149,7 +150,7 @@ export function PropertyCard(props: {
  type={'button'}
  onClick={props.onOpen}
  data-testid={'property-open-' + props.property.slug}
- className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
+ className={'inline-flex min-h-[3.35rem] items-center justify-center rounded-[1.4rem] bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
  >
  Ver propiedad
  </button>
@@ -159,7 +160,7 @@ export function PropertyCard(props: {
  href={buildPropertyWhatsAppLink(props.property)}
  target={'_blank'}
  rel={'noopener noreferrer'}
- className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
+ className={'inline-flex min-h-[3.35rem] items-center justify-center rounded-[1.4rem] border border-slate-200 bg-white px-5 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
  >
  Consultar por WhatsApp
  </a>
@@ -218,7 +219,7 @@ export function PropertyQuickViewModal(props: {
  return (
  <div className={'fixed inset-0 z-[70] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-sm md:items-center md:p-6'}>
  <button aria-label={'Cerrar'} className={'absolute inset-0'} onClick={props.onClose} />
- <div data-testid={'property-quick-view'} className={'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-white p-4 shadow-2xl sm:p-5 md:max-w-[960px] md:rounded-[2rem] md:p-6'}>
+ <div data-testid={'property-quick-view'} className={'relative z-10 max-h-[92vh] w-full overflow-y-auto rounded-t-[2rem] bg-white p-4 shadow-2xl sm:p-5 md:max-w-[1120px] md:rounded-[2rem] md:p-6 lg:p-7'}>
  <div className={'mb-5 flex items-start justify-between gap-4'}>
  <div className={'min-w-0'}>
  <div className={'flex flex-wrap items-center gap-2'}>
@@ -229,13 +230,13 @@ export function PropertyQuickViewModal(props: {
  <h3 className={'mt-3 text-3xl font-semibold text-slate-950'}>{props.property.title}</h3>
  <p className={'mt-2 text-sm text-slate-500'}>{props.property.addressOrZone} - {props.property.location}</p>
  </div>
- <button data-testid={'property-quick-view-close'} onClick={props.onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>
+ <button data-testid={'property-quick-view-close'} onClick={props.onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>
  ×
  </button>
  </div>
 
- <div className={'grid gap-6 lg:grid-cols-[0.95fr_1.05fr]'}>
- <div className={'space-y-4'}>
+ <div className={'grid gap-6 lg:grid-cols-[minmax(0,1fr)_430px]'}>
+ <div className={'space-y-4 self-start lg:sticky lg:top-0'}>
  <div className={'overflow-hidden rounded-[1.8rem] border border-slate-200 bg-slate-100'}>
  <img src={activeImage?.url} alt={activeImage?.alt || props.property.title} className={'aspect-[4/3] w-full object-cover'} />
  </div>
@@ -257,8 +258,8 @@ export function PropertyQuickViewModal(props: {
 
  <div className={'space-y-5'}>
  <div className={'rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5'}>
- <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Vista demo</p>
- <p className={'mt-2 text-sm leading-7 text-slate-600'}>Esta ficha muestra cómo podría ver un cliente la publicación final: galería, datos clave, precio opcional y dos formas simples de contacto.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Ficha destacada</p>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>Información clara, datos relevantes y contacto inmediato en un solo recorrido visual.</p>
  </div>
 
  <div className={'rounded-[1.8rem] border border-sky-100 bg-[linear-gradient(180deg,#f7fbff,#ffffff)] p-5 shadow-[0_20px_45px_-36px_rgba(37,99,235,0.28)]'}>
@@ -286,7 +287,7 @@ export function PropertyQuickViewModal(props: {
  href={buildPropertyWhatsAppLink(props.property)}
  target={'_blank'}
  rel={'noopener noreferrer'}
- className={'inline-flex w-full items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
+ className={'inline-flex min-h-[3.35rem] w-full items-center justify-center rounded-[1.4rem] bg-[#0f4c81] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
  >
  Contactar por WhatsApp
  </a>
@@ -294,15 +295,15 @@ export function PropertyQuickViewModal(props: {
  type={'button'}
  data-testid={'property-modal-contact-request'}
  onClick={scrollToContactForm}
- className={'inline-flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
+ className={'inline-flex min-h-[3.35rem] w-full items-center justify-center rounded-[1.4rem] border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
  >
  Solicitar contacto
  </button>
  </div>
 
- <p className={'text-xs leading-6 text-slate-500'}>La segunda opción abre el formulario para que el equipo responda por llamada, email o WhatsApp.</p>
+ <p className={'text-xs leading-6 text-slate-500'}>La segunda opción abre el formulario para que el equipo comercial responda por llamada, email o WhatsApp.</p>
 
- <div ref={contactFormRef} className={'rounded-[1.75rem] border border-slate-200 bg-white p-5'}>
+ <div ref={contactFormRef} className={'rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5'}>
  <InquiryForm
  property={props.property}
  source={'propiedad'}

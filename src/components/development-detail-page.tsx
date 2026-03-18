@@ -23,7 +23,7 @@ export function DevelopmentDetailPage({ slug }: { slug: string }) {
  const development = getDevelopmentBySlug(slug);
 
  if (!development) {
- return (<div className={'rounded-[2rem] border border-dashed border-slate-300 bg-white/70 px-6 py-16 text-center'}><h1 className={'text-2xl font-semibold text-slate-950'}>No encontramos ese loteo</h1><p className={'mt-3 text-slate-500'}>Podes volver al listado general y seguir navegando.</p><Link href={'/loteos'} className={'mt-6 inline-flex rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white'}>Volver a loteos</Link></div>);
+ return (<div className={'rounded-[2rem] border border-dashed border-slate-300 bg-white/70 px-6 py-16 text-center'}><h1 className={'text-2xl font-semibold text-slate-950'}>No encontramos ese loteo</h1><p className={'mt-3 text-slate-500'}>Podés volver al listado general y seguir navegando.</p><Link href={'/loteos'} className={'mt-6 inline-flex rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white'}>Volver a loteos</Link></div>);
  }
 
  const view = searchParams.get('vista') === 'lista' ? 'lista' : 'mapa';
@@ -52,9 +52,9 @@ export function DevelopmentDetailPage({ slug }: { slug: string }) {
  async function copyCurrentView() {
  try {
  await navigator.clipboard.writeText(window.location.href);
- showToast({ title: 'Vista copiada', description: 'Ya puedes compartir este filtro con el cliente.', tone: 'success' });
+ showToast({ title: 'Vista copiada', description: 'Ya podés compartir este filtro con el cliente.', tone: 'success' });
  } catch {
- showToast({ title: 'No pudimos copiar el enlace', description: 'Puedes copiar la URL manualmente desde el navegador.', tone: 'error' });
+ showToast({ title: 'No pudimos copiar el enlace', description: 'Podés copiar la URL manualmente desde el navegador.', tone: 'error' });
  }
  }
 
@@ -69,7 +69,7 @@ export function DevelopmentDetailPage({ slug }: { slug: string }) {
  <div data-testid={'development-detail-page'} className={'mx-auto min-w-0 max-w-[1100px] space-y-5'}>
  <section data-testid={'development-access-bar'} className={'rounded-[1.9rem] border border-slate-200/80 bg-white/90 px-5 py-4 shadow-[0_20px_40px_-32px_rgba(15,23,42,0.18)]'}>
  <div className={'flex flex-wrap items-center justify-between gap-4'}>
- <p className={'text-sm font-semibold uppercase tracking-[0.18em] text-slate-500'}>Acceso publico</p>
+ <p className={'text-sm font-semibold uppercase tracking-[0.18em] text-slate-500'}>Acceso público</p>
  <Link href={'/admin'} data-testid={'development-admin-link'} className={'inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Admin</Link>
  </div>
  </section>
