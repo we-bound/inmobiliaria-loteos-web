@@ -47,7 +47,7 @@ export interface AirtableInquiryFields {
  phone?: string;
  email?: string;
  message?: string;
- source?: 'lote' | 'contacto' | 'alerta';
+ source?: 'lote' | 'contacto' | 'alerta' | 'propiedad';
  status?: 'nuevo' | 'contactado' | 'seguimiento';
 }
 

@@ -2,7 +2,13 @@ export type Currency = 'ARS' | 'USD';
 
 export type LotStatus = 'disponible' | 'reservado' | 'vendido' | 'consultado';
 
-export type LeadSource = 'lote' | 'contacto' | 'alerta';
+export type PropertyType = 'casa' | 'departamento' | 'cabana';
+
+export type PropertyOperation = 'alquiler' | 'venta';
+
+export type PropertyAvailability = 'disponible' | 'reservada' | 'cerrada' | 'oculta';
+
+export type LeadSource = 'lote' | 'contacto' | 'alerta' | 'propiedad';
 
 export type IntegrationStatus = 'not_connected' | 'validating' | 'connected' | 'error';
 
@@ -73,12 +79,47 @@ export interface Development {
  lots: Lot[];
 }
 
+export interface PropertyImage {
+ id: string;
+ url: string;
+ alt: string;
+ isCover: boolean;
+}
+
+export interface Property {
+ id: string;
+ slug: string;
+ title: string;
+ type: PropertyType;
+ operation: PropertyOperation;
+ availability: PropertyAvailability;
+ location: string;
+ province: string;
+ addressOrZone: string;
+ shortDescription: string;
+ description: string;
+ surfaceM2: number;
+ coveredM2?: number;
+ bedrooms?: number;
+ bathrooms?: number;
+ parking?: boolean;
+ price?: number;
+ currency?: Currency;
+ showPrice: boolean;
+ featured: boolean;
+ images: PropertyImage[];
+ whatsappMessage?: string;
+}
+
 export interface Lead {
  id: string;
  developmentSlug?: string;
  lotId?: string;
  lotCode?: string;
  lotLabel?: string;
+ propertyId?: string;
+ propertySlug?: string;
+ propertyLabel?: string;
  name: string;
  phone: string;
  email: string;
@@ -93,6 +134,9 @@ export interface LeadInput {
  lotId?: string;
  lotCode?: string;
  lotLabel?: string;
+ propertyId?: string;
+ propertySlug?: string;
+ propertyLabel?: string;
  name: string;
  phone: string;
  email: string;
@@ -108,6 +152,39 @@ export interface LotUpdateInput {
  installmentValue?: number;
  notes?: string;
 }
+
+export interface PropertyImageInput {
+ id?: string;
+ url: string;
+ alt?: string;
+ isCover?: boolean;
+}
+
+export interface PropertyUpsertInput {
+ title: string;
+ slug?: string;
+ type: PropertyType;
+ operation: PropertyOperation;
+ availability: PropertyAvailability;
+ location: string;
+ province: string;
+ addressOrZone: string;
+ shortDescription: string;
+ description: string;
+ surfaceM2: number;
+ coveredM2?: number;
+ bedrooms?: number;
+ bathrooms?: number;
+ parking?: boolean;
+ price?: number;
+ currency?: Currency;
+ showPrice: boolean;
+ featured: boolean;
+ images: PropertyImageInput[];
+ whatsappMessage?: string;
+}
+
+export type PropertyUpdateInput = Partial<PropertyUpsertInput>;
 
 export interface AirtableBaseOption {
  id: string;

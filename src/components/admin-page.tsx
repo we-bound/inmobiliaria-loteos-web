@@ -3,11 +3,12 @@
 import { useState } from 'react';
 
 import { AdminAirtablePanel } from '@/components/admin-airtable';
+import { AdminPropertiesPanel } from '@/components/admin-properties';
 import { AdminSidebar, LeadsTable, LotsTable, MetricsCards } from '@/components/admin-ui';
 import { useAppData } from '@/components/providers';
 import { airtableIntegrationEnabled } from '@/lib/features';
 
-type AdminTab = 'panel' | 'integrations';
+type AdminTab = 'panel' | 'properties' | 'integrations';
 
 export function AdminPage() {
  const { developments, leads, updateLot } = useAppData();
@@ -18,10 +19,12 @@ export function AdminPage() {
  const tabs = airtableIntegrationEnabled
  ? [
  { id: 'panel' as const, label: 'Panel', description: 'Disponibilidad y leads', testId: 'admin-tab-panel' },
+ { id: 'properties' as const, label: 'Propiedades', description: 'Alquiler y venta', testId: 'admin-tab-properties' },
  { id: 'integrations' as const, label: 'Integraciones', description: 'Airtable y fuente de datos', testId: 'admin-tab-integrations' },
  ]
  : [
  { id: 'panel' as const, label: 'Panel', description: 'Disponibilidad y leads', testId: 'admin-tab-panel' },
+ { id: 'properties' as const, label: 'Propiedades', description: 'Alquiler y venta', testId: 'admin-tab-properties' },
  ];
 
  return (
@@ -91,6 +94,10 @@ export function AdminPage() {
  />
 
  <LeadsTable leads={leads} />
+ </div>
+ ) : selectedTab === 'properties' ? (
+ <div data-testid={'admin-properties-tab-view'}>
+ <AdminPropertiesPanel />
  </div>
  ) : (
  <div data-testid={'admin-integrations-view'}>

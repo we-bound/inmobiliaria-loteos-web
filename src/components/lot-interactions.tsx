@@ -4,8 +4,8 @@ import { FormEvent, useEffect, useRef, useState, useTransition } from 'react';
 
 import { useAppData } from '@/components/providers';
 import { cn, formatArea, formatCurrency, statusMeta } from '@/lib/format';
-import { buildWhatsAppLink } from '@/lib/whatsapp';
-import { Development, LeadSource, Lot, LotStatus } from '@/types';
+import { buildPropertyWhatsAppLink, buildWhatsAppLink } from '@/lib/whatsapp';
+import { Development, LeadSource, Lot, LotStatus, Property } from '@/types';
 
 interface FormFields {
  name: string;
@@ -26,13 +26,17 @@ function validate(fields: FormFields) {
  return errors;
 }
 
-function defaultMessage(source: LeadSource, development?: Development, lot?: Lot) {
+function defaultMessage(source: LeadSource, development?: Development, lot?: Lot, property?: Property) {
  if (source === 'alerta') {
  if (lot && development) {
  return 'Quiero que me avisen si se libera el Lote ' + lot.number + ' o aparece uno similar en ' + development.name + '.';
  }
 
  return 'Quiero recibir novedades si aparece disponibilidad similar en este loteo.';
+ }
+
+ if (source === 'propiedad' && property) {
+ return 'Quiero mas informacion sobre ' + property.title + ' y coordinar una visita.';
  }
 
  if (lot) {
@@ -136,7 +140,7 @@ export function SitePlanMap(props: { development: Development; selectedLotId?: s
  );
 }
 
-export function InquiryForm(props: { development?: Development; lot?: Lot; source: LeadSource; submitLabel: string; description: string; }) {
+export function InquiryForm(props: { development?: Development; lot?: Lot; property?: Property; source: LeadSource; submitLabel: string; description: string; }) {
  const { submitLead, showToast } = useAppData();
  const [isPending, startSubmit] = useTransition();
  const [errors, setErrors] = useState<Partial<FormFields>>({});
@@ -147,7 +151,7 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; sourc
  name: '',
  phone: '',
  email: '',
- message: defaultMessage(props.source, props.development, props.lot),
+ message: defaultMessage(props.source, props.development, props.lot, props.property),
  });
 
  function updateField<K extends keyof FormFields>(key: K, value: FormFields[K]) {
@@ -165,19 +169,19 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; sourc
  }
 
  startSubmit(() => {
- submitLead({ developmentSlug: props.development?.slug, lotId: props.lot?.id, lotCode: props.lot?.lotCode, lotLabel: props.lot ? 'Lote ' + props.lot.number : undefined, name: fields.name, phone: fields.phone, email: fields.email, message: fields.message, source: props.source }, { startedAt, company });
+ submitLead({ developmentSlug: props.development?.slug, lotId: props.lot?.id, lotCode: props.lot?.lotCode, lotLabel: props.lot ? 'Lote ' + props.lot.number : undefined, propertyId: props.property?.id, propertySlug: props.property?.slug, propertyLabel: props.property?.title, name: fields.name, phone: fields.phone, email: fields.email, message: fields.message, source: props.source }, { startedAt, company });
  setSent(true);
- setFields({ name: '', phone: '', email: '', message: defaultMessage(props.source, props.development, props.lot) });
+ setFields({ name: '', phone: '', email: '', message: defaultMessage(props.source, props.development, props.lot, props.property) });
  setCompany('');
  setStartedAt(Date.now());
- showToast({ title: props.source === 'alerta' ? 'Alerta registrada' : 'Consulta enviada', description: props.source === 'alerta' ? 'La alerta quedo lista para seguimiento comercial.' : 'La consulta fue simulada con exito y actualizo la UI.', tone: 'success' });
+ showToast({ title: props.source === 'alerta' ? 'Alerta registrada' : 'Consulta enviada', description: props.source === 'alerta' ? 'La alerta quedo lista para seguimiento comercial.' : props.source === 'propiedad' ? 'La consulta de la propiedad fue simulada con exito.' : 'La consulta fue simulada con exito y actualizo la UI.', tone: 'success' });
  });
  }
 
- const whatsappLink = buildWhatsAppLink(props.development, props.lot, fields.name);
+ const whatsappLink = props.property ? buildPropertyWhatsAppLink(props.property, fields.name) : buildWhatsAppLink(props.development, props.lot, fields.name);
 
  return (
- <form data-testid={props.lot ? 'inquiry-form-lot-' + props.lot.lotCode : 'inquiry-form-' + props.source} onSubmit={handleSubmit} className={'space-y-4'}>
+ <form data-testid={props.property ? 'inquiry-form-property-' + props.property.slug : props.lot ? 'inquiry-form-lot-' + props.lot.lotCode : 'inquiry-form-' + props.source} onSubmit={handleSubmit} className={'space-y-4'}>
  <div>
  <p className={'text-sm font-semibold text-slate-900'}>{props.submitLabel}</p>
  <p className={'mt-1 text-sm leading-6 text-slate-500'}>{props.description}</p>

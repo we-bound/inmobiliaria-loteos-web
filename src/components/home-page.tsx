@@ -3,10 +3,12 @@
 import Link from 'next/link';
 
 import { Hero, LoteoCard } from '@/components/loteos-ui';
+import { PropertyCard } from '@/components/properties-ui';
 import { useAppData } from '@/components/providers';
 
 export function HomePage() {
- const { developments } = useAppData();
+ const { developments, properties } = useAppData();
+ const featuredProperties = properties.filter((property) => property.featured && property.availability !== 'oculta').slice(0, 3);
 
  return (
  <div data-testid={'home-page'} className={'min-w-0 space-y-12'}>
@@ -25,6 +27,24 @@ export function HomePage() {
  {developments.map((development) => (<LoteoCard key={development.slug} development={development} />))}
  </div>
  </section>
+
+ {featuredProperties.length > 0 ? (
+ <section className={'space-y-6'}>
+ <div className={'flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between'}>
+ <div>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Propiedades destacadas</p>
+ <h2 className={'mt-2 text-3xl font-semibold text-slate-950'}>Casas, departamentos y cabanas listas para presentar en grilla.</h2>
+ </div>
+ <Link href={'/propiedades'} className={'inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Ver propiedades</Link>
+ </div>
+
+ <div data-testid={'featured-properties'} className={'grid gap-6 md:grid-cols-2 xl:grid-cols-3'}>
+ {featuredProperties.map((property) => (
+ <PropertyCard key={property.id} property={property} href={'/propiedades?propiedad=' + property.slug} />
+ ))}
+ </div>
+ </section>
+ ) : null}
 
  <section className={'grid gap-6 lg:grid-cols-[0.95fr_1.05fr]'}>
  <article className={'rounded-[2rem] border border-white/80 bg-white p-6 shadow-[0_32px_70px_-48px_rgba(15,23,42,0.3)]'}>

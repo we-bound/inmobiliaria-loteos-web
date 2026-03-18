@@ -13,9 +13,15 @@ import {
  getMockLeads,
  getMockLotByCode,
  getMockLots,
+ getMockProperties,
+ getMockPropertyById,
+ getMockPropertyBySlug,
+ createMockProperty,
+ updateMockProperty,
+ deleteMockProperty,
  updateMockLot,
 } from '@/lib/server/mock-store';
-import { Development, Lead, LeadInput, Lot, LotUpdateInput } from '@/types';
+import { Development, Lead, LeadInput, Lot, LotUpdateInput, Property, PropertyUpdateInput, PropertyUpsertInput } from '@/types';
 
 export type CatalogSource = 'airtable' | 'mock';
 
@@ -99,14 +105,59 @@ export async function loadLotByCode(lotCode: string): Promise<CatalogResult<Lot 
 
 export async function loadAppBootstrapData() {
  noStore();
- const [developmentsResult, leadsResult] = await Promise.all([loadDevelopments(), loadLeads()]);
+ const [developmentsResult, propertiesResult, leadsResult] = await Promise.all([loadDevelopments(), loadProperties(), loadLeads()]);
 
  return {
  developments: developmentsResult.data,
+ properties: propertiesResult.data,
  leads: leadsResult.data,
  source: developmentsResult.source === 'airtable' || leadsResult.source === 'airtable' ? 'airtable' : 'mock',
- fallback: developmentsResult.fallback || leadsResult.fallback,
+ fallback: developmentsResult.fallback || propertiesResult.fallback || leadsResult.fallback,
  };
+}
+
+export async function loadProperties(): Promise<CatalogResult<Property[]>> {
+ noStore();
+ return { data: getMockProperties(), source: 'mock', fallback: false };
+}
+
+export async function loadPropertyBySlug(slug: string): Promise<CatalogResult<Property | undefined>> {
+ const result = await loadProperties();
+ const property = result.data.find((item) => item.slug === slug);
+
+ if (property) {
+ return { data: property, source: result.source, fallback: result.fallback };
+ }
+
+ const fallback = getMockPropertyBySlug(slug);
+ return { data: fallback, source: fallback ? 'mock' : result.source, fallback: true };
+}
+
+export async function createProperty(input: PropertyUpsertInput): Promise<CatalogResult<Property>> {
+ return { data: createMockProperty(input), source: 'mock', fallback: false };
+}
+
+export async function patchProperty(propertyId: string, patch: PropertyUpdateInput): Promise<CatalogResult<Property | null>> {
+ const existing = getMockPropertyById(propertyId);
+
+ if (!existing) {
+ return { data: null, source: 'mock', fallback: false };
+ }
+
+ const normalizedPatch: PropertyUpdateInput = { ...patch };
+
+ if (patch.slug && patch.slug !== existing.slug) {
+ const duplicated = getMockProperties().find((property) => property.slug === patch.slug && property.id !== propertyId);
+ if (duplicated) {
+ normalizedPatch.slug = patch.slug + '-' + propertyId;
+ }
+ }
+
+ return { data: updateMockProperty(propertyId, normalizedPatch), source: 'mock', fallback: false };
+}
+
+export async function removeProperty(propertyId: string): Promise<CatalogResult<boolean>> {
+ return { data: deleteMockProperty(propertyId), source: 'mock', fallback: false };
 }
 
 export async function createInquiry(input: LeadInput): Promise<CatalogResult<Lead>> {

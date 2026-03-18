@@ -8,11 +8,11 @@ export function AdminSidebar() {
  <aside data-testid={'admin-sidebar'} className={'rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Panel comercial</p>
  <h2 className={'mt-3 text-2xl font-semibold text-slate-950'}>Administracion simple y clara</h2>
- <p className={'mt-3 text-sm leading-7 text-slate-600'}>Visualiza disponibilidad, condiciones comerciales, alertas y consultas desde una sola pantalla con lectura rapida para el equipo comercial.</p>
+ <p className={'mt-3 text-sm leading-7 text-slate-600'}>Visualiza disponibilidad, condiciones comerciales, propiedades, alertas y consultas desde una sola pantalla con lectura rapida para el equipo comercial.</p>
  <div className={'mt-6 space-y-3 text-sm text-slate-600'}>
  <div className={'rounded-2xl border border-sky-100 bg-sky-50 px-4 py-3'}>Disponibilidad sincronizada con mapa, lista y detalle del lote.</div>
  <div className={'rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3'}>Condiciones editables para presentar precio, anticipo y cuotas.</div>
- <div className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3'}>Alertas y leads visibles para seguimiento comercial inmediato.</div>
+ <div className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3'}>Alertas, leads y propiedades en alquiler o venta visibles para seguimiento inmediato.</div>
  </div>
  </aside>
  );
@@ -127,7 +127,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
  <section className={'min-w-0 rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'mb-5'}>
  <h3 className={'text-xl font-semibold text-slate-950'}>Leads y alertas</h3>
- <p className={'text-sm text-slate-500'}>Consultas publicas y alertas comerciales guardadas localmente para seguimiento del equipo.</p>
+ <p className={'text-sm text-slate-500'}>Consultas publicas de lotes, propiedades y alertas comerciales guardadas localmente para seguimiento del equipo.</p>
  </div>
  <div className={'-mx-5 overflow-x-auto px-5'}>
  <table data-testid={'admin-leads-table'} className={'w-full min-w-[760px] text-left text-sm'}>
@@ -136,7 +136,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
  <th className={'pb-3'}>Fecha</th>
  <th className={'pb-3'}>Nombre</th>
  <th className={'pb-3'}>Origen</th>
- <th className={'pb-3'}>Lote</th>
+ <th className={'pb-3'}>Interes</th>
  <th className={'pb-3'}>Contacto</th>
  <th className={'pb-3'}>Estado</th>
  <th className={'pb-3'}>Mensaje</th>
@@ -148,7 +148,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
  <td className={'py-4 text-slate-500'}>{new Date(lead.createdAt).toLocaleDateString('es-AR')}</td>
  <td className={'py-4 font-medium text-slate-900'}>{lead.name}</td>
  <td className={'py-4'}><span className={'inline-flex rounded-full px-3 py-1 text-xs font-semibold ' + leadSourceMeta[lead.source].tone}>{leadSourceMeta[lead.source].label}</span></td>
- <td className={'py-4'}>{lead.lotLabel || 'Consulta general'}</td>
+ <td className={'py-4'}>{lead.propertyLabel || lead.lotLabel || 'Consulta general'}</td>
  <td className={'py-4'}><div>{lead.phone}</div><div className={'text-slate-500'}>{lead.email}</div></td>
  <td className={'py-4'}><span className={'rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700'}>{lead.status}</span></td>
  <td className={'py-4 text-slate-600'}>{lead.message}</td>
