@@ -38,7 +38,7 @@ export const propertyOperationMeta: Record<PropertyOperation, { label: string; t
 export const propertyTypeMeta: Record<PropertyType, { label: string }> = {
  casa: { label: 'Casa' },
  departamento: { label: 'Departamento' },
- cabana: { label: 'Cabana' },
+ cabana: { label: 'Cabaña' },
 };
 
 export const propertyAvailabilityMeta: Record<PropertyAvailability, { tone: string }> = {
@@ -57,7 +57,7 @@ export function formatCurrency(value: number, currency: Currency = 'ARS') {
 }
 
 export function formatArea(value: number) {
- return value.toLocaleString('es-AR') + ' m2';
+ return value.toLocaleString('es-AR') + ' m²';
 }
 
 export function capitalize(value: string) {

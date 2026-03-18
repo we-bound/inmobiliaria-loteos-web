@@ -8,22 +8,24 @@ import { AdminSidebar, LeadsTable, LotsTable, MetricsCards } from '@/components/
 import { useAppData } from '@/components/providers';
 import { airtableIntegrationEnabled } from '@/lib/features';
 
-type AdminTab = 'panel' | 'properties' | 'integrations';
+type VisibleAdminTab = 'lots' | 'properties' | 'integrations';
 
 export function AdminPage() {
  const { developments, leads, updateLot } = useAppData();
  const [selectedDevelopment, setSelectedDevelopment] = useState('all');
  const [selectedStatus, setSelectedStatus] = useState('all');
- const [selectedTab, setSelectedTab] = useState<AdminTab>('panel');
+ const [selectedTab, setSelectedTab] = useState<VisibleAdminTab>('lots');
+ const lotLeads = leads.filter((lead) => lead.source !== 'propiedad');
+ const propertyLeads = leads.filter((lead) => lead.source === 'propiedad');
 
  const tabs = airtableIntegrationEnabled
  ? [
- { id: 'panel' as const, label: 'Panel', description: 'Disponibilidad y leads', testId: 'admin-tab-panel' },
+ { id: 'lots' as const, label: 'Lotes', description: 'Disponibilidad y leads', testId: 'admin-tab-lots' },
  { id: 'properties' as const, label: 'Propiedades', description: 'Alquiler y venta', testId: 'admin-tab-properties' },
  { id: 'integrations' as const, label: 'Integraciones', description: 'Airtable y fuente de datos', testId: 'admin-tab-integrations' },
  ]
  : [
- { id: 'panel' as const, label: 'Panel', description: 'Disponibilidad y leads', testId: 'admin-tab-panel' },
+ { id: 'lots' as const, label: 'Lotes', description: 'Disponibilidad y leads', testId: 'admin-tab-lots' },
  { id: 'properties' as const, label: 'Propiedades', description: 'Alquiler y venta', testId: 'admin-tab-properties' },
  ];
 
@@ -33,12 +35,11 @@ export function AdminPage() {
  <div className={'flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between'}>
  <div className={'max-w-3xl'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Admin mock</p>
- <h1 className={'mt-3 text-4xl font-semibold text-slate-950'}>Panel simple de disponibilidad</h1>
- <p className={'mt-3 text-lg leading-8 text-slate-600'}>Administra disponibilidad, condiciones comerciales y seguimiento de leads con una UI clara para la primera demo.</p>
+ <h1 className={'mt-3 text-4xl font-semibold text-slate-950'}>Panel comercial simple para la demo</h1>
+ <p className={'mt-3 text-lg leading-8 text-slate-600'}>Separá loteos y propiedades en dashboards distintos para que el cliente entienda rápido cómo se administran disponibilidades, publicaciones y leads.</p>
  </div>
 
- {airtableIntegrationEnabled ? (
- <div className={'grid gap-2 rounded-[1.6rem] border border-slate-200 bg-slate-50 p-2 sm:grid-cols-2'}>
+ <div className={'grid gap-2 rounded-[1.6rem] border border-slate-200 bg-slate-50 p-2 sm:grid-cols-2' + (airtableIntegrationEnabled ? ' lg:grid-cols-3' : '')}>
  {tabs.map((tab) => {
  const active = selectedTab === tab.id;
 
@@ -56,21 +57,20 @@ export function AdminPage() {
  );
  })}
  </div>
- ) : null}
  </div>
  </section>
 
- {selectedTab === 'panel' || !airtableIntegrationEnabled ? (
+ {selectedTab === 'lots' ? (
  <div data-testid={'admin-panel-view'} className={'space-y-8'}>
  <section className={'grid gap-6 xl:grid-cols-[0.35fr_0.65fr]'}>
  <AdminSidebar />
  <div className={'min-w-0 space-y-6'}>
  <div>
- <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Operacion</p>
- <h2 className={'mt-3 text-3xl font-semibold text-slate-950'}>Disponibilidad, alertas y leads sincronizados</h2>
- <p className={'mt-3 text-lg leading-8 text-slate-600'}>Todo el panel sigue funcionando con estado local compartido para mostrar actualizacion inmediata de lotes, precios, anticipo, cuotas y alertas comerciales.</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Dashboard de lotes</p>
+ <h2 className={'mt-3 text-3xl font-semibold text-slate-950'}>Disponibilidad, alertas y leads de lotes</h2>
+ <p className={'mt-3 text-lg leading-8 text-slate-600'}>Todo el panel sigue funcionando con estado local compartido para mostrar actualización inmediata de lotes, precios, anticipo, cuotas y alertas comerciales.</p>
  </div>
- <MetricsCards developments={developments} leads={leads} />
+ <MetricsCards developments={developments} leads={lotLeads} />
  </div>
  </section>
 
@@ -93,11 +93,16 @@ export function AdminPage() {
  }}
  />
 
- <LeadsTable leads={leads} />
+ <LeadsTable
+ leads={lotLeads}
+ title={'Leads de lotes y alertas'}
+ description={'Consultas y alertas comerciales originadas desde loteos, mapa y detalle de lote.'}
+ testId={'admin-lot-leads-table'}
+ />
  </div>
  ) : selectedTab === 'properties' ? (
  <div data-testid={'admin-properties-tab-view'}>
- <AdminPropertiesPanel />
+ <AdminPropertiesPanel leads={propertyLeads} />
  </div>
  ) : (
  <div data-testid={'admin-integrations-view'}>

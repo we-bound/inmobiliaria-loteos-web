@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { InquiryForm } from '@/components/lot-interactions';
 import {
@@ -60,10 +60,10 @@ export function PropertyFilters(props: {
  <div data-testid={'properties-filters'} className={'grid gap-4 rounded-[2rem] border border-white/90 bg-white/95 p-5 shadow-[0_24px_50px_-40px_rgba(15,23,42,0.24)] md:grid-cols-2 xl:grid-cols-4'}>
  <label className={'min-w-0 space-y-2'}>
  <span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Buscador</span>
- <input data-testid={'properties-filter-search'} value={props.search} onChange={(event) => props.onSearch(event.target.value)} placeholder={'Buscar por titulo o ubicacion'} className={'w-full min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white'} />
+ <input data-testid={'properties-filter-search'} value={props.search} onChange={(event) => props.onSearch(event.target.value)} placeholder={'Buscar por título o ubicación'} className={'w-full min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-300 focus:bg-white'} />
  </label>
  <label className={'min-w-0 space-y-2'}>
- <span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Operacion</span>
+ <span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Operación</span>
  <select data-testid={'properties-filter-operation'} value={props.operation} onChange={(event) => props.onOperation(event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'all'}>Alquiler y venta</option>
  <option value={'alquiler'}>Alquiler</option>
@@ -76,11 +76,11 @@ export function PropertyFilters(props: {
  <option value={'all'}>Todos los tipos</option>
  <option value={'casa'}>Casa</option>
  <option value={'departamento'}>Departamento</option>
- <option value={'cabana'}>Cabana</option>
+ <option value={'cabana'}>Cabaña</option>
  </select>
  </label>
  <label className={'min-w-0 space-y-2'}>
- <span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Ubicacion</span>
+ <span className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-500'}>Ubicación</span>
  <select data-testid={'properties-filter-location'} value={props.location} onChange={(event) => props.onLocation(event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'all'}>Todas</option>
  {props.locations.map((item) => <option key={item} value={item}>{item}</option>)}
@@ -131,7 +131,7 @@ export function PropertyCard(props: {
 
  <div className={'flex flex-wrap gap-2 text-sm text-slate-600'}>
  {typeof props.property.bedrooms === 'number' ? <span className={'rounded-full bg-slate-100 px-3 py-1'}>{props.property.bedrooms} dorm.</span> : null}
- {typeof props.property.bathrooms === 'number' ? <span className={'rounded-full bg-slate-100 px-3 py-1'}>{props.property.bathrooms} banos</span> : null}
+ {typeof props.property.bathrooms === 'number' ? <span className={'rounded-full bg-slate-100 px-3 py-1'}>{props.property.bathrooms} baños</span> : null}
  {props.property.parking ? <span className={'rounded-full bg-slate-100 px-3 py-1'}>Cochera</span> : null}
  </div>
 
@@ -161,7 +161,7 @@ export function PropertyCard(props: {
  rel={'noopener noreferrer'}
  className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
  >
- WhatsApp
+ Consultar por WhatsApp
  </a>
  </div>
  </div>
@@ -175,6 +175,7 @@ export function PropertyQuickViewModal(props: {
  onClose: () => void;
 }) {
  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+ const contactFormRef = useRef<HTMLDivElement | null>(null);
 
  useEffect(() => {
  if (!props.open) {
@@ -200,6 +201,16 @@ export function PropertyQuickViewModal(props: {
  return props.property.images.find((image) => image.id === resolvedImageId) || primaryImage(props.property);
  }, [props.property, resolvedImageId]);
 
+ function scrollToContactForm() {
+ if (!contactFormRef.current) {
+ return;
+ }
+
+ contactFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ const firstInput = contactFormRef.current.querySelector<HTMLInputElement>('input[data-testid="inquiry-name-input"]');
+ firstInput?.focus();
+ }
+
  if (!props.open || !props.property) {
  return null;
  }
@@ -219,7 +230,7 @@ export function PropertyQuickViewModal(props: {
  <p className={'mt-2 text-sm text-slate-500'}>{props.property.addressOrZone} - {props.property.location}</p>
  </div>
  <button data-testid={'property-quick-view-close'} onClick={props.onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>
- X
+ ×
  </button>
  </div>
 
@@ -245,6 +256,11 @@ export function PropertyQuickViewModal(props: {
  </div>
 
  <div className={'space-y-5'}>
+ <div className={'rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>Vista demo</p>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>Esta ficha muestra cómo podría ver un cliente la publicación final: galería, datos clave, precio opcional y dos formas simples de contacto.</p>
+ </div>
+
  <div className={'rounded-[1.8rem] border border-sky-100 bg-[linear-gradient(180deg,#f7fbff,#ffffff)] p-5 shadow-[0_20px_45px_-36px_rgba(37,99,235,0.28)]'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>{props.property.showPrice ? 'Precio comercial' : 'Valor referencial'}</p>
  <p className={'mt-3 text-3xl font-semibold text-slate-950'}>{propertyPriceLabel(props.property)}</p>
@@ -252,18 +268,19 @@ export function PropertyQuickViewModal(props: {
  </div>
 
  <div className={'grid gap-3 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 sm:grid-cols-2'}>
- <Info label={'Ubicacion'} value={props.property.location} />
+ <Info label={'Ubicación'} value={props.property.location} />
  <Info label={'Zona'} value={props.property.addressOrZone} />
  <Info label={'Superficie'} value={formatArea(props.property.surfaceM2)} />
  <Info label={'Cubiertos'} value={props.property.coveredM2 ? formatArea(props.property.coveredM2) : 'No informado'} />
  <Info label={'Dormitorios'} value={typeof props.property.bedrooms === 'number' ? String(props.property.bedrooms) : 'No informado'} />
- <Info label={'Banos'} value={typeof props.property.bathrooms === 'number' ? String(props.property.bathrooms) : 'No informado'} />
+ <Info label={'Baños'} value={typeof props.property.bathrooms === 'number' ? String(props.property.bathrooms) : 'No informado'} />
  </div>
 
  <div className={'rounded-[1.75rem] border border-slate-200 bg-white p-5'}>
  <p className={'text-sm leading-7 text-slate-600'}>{props.property.description}</p>
  </div>
 
+ <div className={'grid gap-3 sm:grid-cols-2'}>
  <a
  data-testid={'property-modal-whatsapp'}
  href={buildPropertyWhatsAppLink(props.property)}
@@ -271,15 +288,27 @@ export function PropertyQuickViewModal(props: {
  rel={'noopener noreferrer'}
  className={'inline-flex w-full items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}
  >
- Consultar por WhatsApp
+ Contactar por WhatsApp
  </a>
+ <button
+ type={'button'}
+ data-testid={'property-modal-contact-request'}
+ onClick={scrollToContactForm}
+ className={'inline-flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}
+ >
+ Solicitar contacto
+ </button>
+ </div>
 
- <div className={'rounded-[1.75rem] border border-slate-200 bg-white p-5'}>
+ <p className={'text-xs leading-6 text-slate-500'}>La segunda opción abre el formulario para que el equipo responda por llamada, email o WhatsApp.</p>
+
+ <div ref={contactFormRef} className={'rounded-[1.75rem] border border-slate-200 bg-white p-5'}>
  <InquiryForm
  property={props.property}
  source={'propiedad'}
- submitLabel={'Consultar propiedad'}
- description={'Dejanos tus datos y te respondemos con disponibilidad, condiciones y pasos para coordinar una visita.'}
+ submitLabel={'Solicitar contacto'}
+ description={'Dejanos tus datos y te respondemos por llamada, email o WhatsApp con disponibilidad, condiciones y próximos pasos.'}
+ showWhatsAppButton={false}
  />
  </div>
  </div>

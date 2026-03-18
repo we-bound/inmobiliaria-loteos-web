@@ -17,7 +17,7 @@ interface FormFields {
 function validate(fields: FormFields) {
  const errors: Partial<FormFields> = {};
  if (!fields.name.trim()) errors.name = 'Ingresa nombre y apellido.';
- if (!fields.phone.trim()) errors.phone = 'Ingresa telefono o WhatsApp.';
+ if (!fields.phone.trim()) errors.phone = 'Ingresa teléfono o WhatsApp.';
  if (!fields.email.trim()) {
  errors.email = 'Ingresa un email.';
  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
@@ -36,7 +36,11 @@ function defaultMessage(source: LeadSource, development?: Development, lot?: Lot
  }
 
  if (source === 'propiedad' && property) {
- return 'Quiero mas informacion sobre ' + property.title + ' y coordinar una visita.';
+ return 'Quiero más información sobre ' + property.title + ' y coordinar una visita.';
+ }
+
+ if (source === 'propiedad') {
+ return 'Quiero recibir opciones similares y coordinar contacto comercial.';
  }
 
  if (lot) {
@@ -80,7 +84,7 @@ export function SitePlanMap(props: { development: Development; selectedLotId?: s
  <div className={'mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between'}>
  <div>
  <p className={'text-sm font-semibold text-slate-900'}>Plano interactivo del loteo</p>
- <p className={'mt-1 text-sm text-slate-500'}>Toca un lote para ver estado, financiacion y consulta inmediata.</p>
+ <p className={'mt-1 text-sm text-slate-500'}>Tocá un lote para ver estado, financiación y consulta inmediata.</p>
  </div>
  <div className={'flex flex-wrap gap-2 text-xs text-slate-600'}>
  <span className={'rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-emerald-800'}>{availableCount} disponibles</span>
@@ -140,7 +144,7 @@ export function SitePlanMap(props: { development: Development; selectedLotId?: s
  );
 }
 
-export function InquiryForm(props: { development?: Development; lot?: Lot; property?: Property; source: LeadSource; submitLabel: string; description: string; }) {
+export function InquiryForm(props: { development?: Development; lot?: Lot; property?: Property; source: LeadSource; submitLabel: string; description: string; showWhatsAppButton?: boolean; }) {
  const { submitLead, showToast } = useAppData();
  const [isPending, startSubmit] = useTransition();
  const [errors, setErrors] = useState<Partial<FormFields>>({});
@@ -164,7 +168,7 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; prope
  setErrors(nextErrors);
 
  if (Object.keys(nextErrors).length > 0) {
- showToast({ title: 'Revisa el formulario', description: 'Hay campos incompletos o con formato invalido.', tone: 'error' });
+ showToast({ title: 'Revisa el formulario', description: 'Hay campos incompletos o con formato inválido.', tone: 'error' });
  return;
  }
 
@@ -174,7 +178,7 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; prope
  setFields({ name: '', phone: '', email: '', message: defaultMessage(props.source, props.development, props.lot, props.property) });
  setCompany('');
  setStartedAt(Date.now());
- showToast({ title: props.source === 'alerta' ? 'Alerta registrada' : 'Consulta enviada', description: props.source === 'alerta' ? 'La alerta quedo lista para seguimiento comercial.' : props.source === 'propiedad' ? 'La consulta de la propiedad fue simulada con exito.' : 'La consulta fue simulada con exito y actualizo la UI.', tone: 'success' });
+ showToast({ title: props.source === 'alerta' ? 'Alerta registrada' : 'Consulta enviada', description: props.source === 'alerta' ? 'La alerta quedó lista para seguimiento comercial.' : props.source === 'propiedad' ? 'La consulta de la propiedad fue simulada con éxito.' : 'La consulta fue simulada con éxito y actualizó la UI.', tone: 'success' });
  });
  }
 
@@ -187,7 +191,7 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; prope
  <p className={'mt-1 text-sm leading-6 text-slate-500'}>{props.description}</p>
  </div>
 
- {sent ? <div className={'rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800'}>Gracias. El registro quedo listo para seguimiento comercial.</div> : null}
+ {sent ? <div className={'rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800'}>Gracias. El registro quedó listo para seguimiento comercial.</div> : null}
 
  <input type={'hidden'} name={'startedAt'} value={String(startedAt)} readOnly />
  <label className={'hidden'} aria-hidden={'true'}>
@@ -197,13 +201,13 @@ export function InquiryForm(props: { development?: Development; lot?: Lot; prope
 
  <div className={'grid gap-4 sm:grid-cols-2'}>
  <label className={'space-y-2'}><span className={'text-sm font-medium text-slate-700'}>Nombre y apellido</span><input data-testid={'inquiry-name-input'} value={fields.name} onChange={(event) => updateField('name', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-400 focus:bg-white'} />{errors.name ? <span className={'text-xs text-rose-600'}>{errors.name}</span> : null}</label>
- <label className={'space-y-2'}><span className={'text-sm font-medium text-slate-700'}>Telefono</span><input data-testid={'inquiry-phone-input'} value={fields.phone} onChange={(event) => updateField('phone', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-400 focus:bg-white'} />{errors.phone ? <span className={'text-xs text-rose-600'}>{errors.phone}</span> : null}</label>
+ <label className={'space-y-2'}><span className={'text-sm font-medium text-slate-700'}>Teléfono</span><input data-testid={'inquiry-phone-input'} value={fields.phone} onChange={(event) => updateField('phone', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-400 focus:bg-white'} />{errors.phone ? <span className={'text-xs text-rose-600'}>{errors.phone}</span> : null}</label>
  </div>
  <label className={'space-y-2'}><span className={'text-sm font-medium text-slate-700'}>Email</span><input data-testid={'inquiry-email-input'} value={fields.email} onChange={(event) => updateField('email', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-400 focus:bg-white'} />{errors.email ? <span className={'text-xs text-rose-600'}>{errors.email}</span> : null}</label>
  <label className={'space-y-2'}><span className={'text-sm font-medium text-slate-700'}>Mensaje opcional</span><textarea data-testid={'inquiry-message-input'} value={fields.message} onChange={(event) => updateField('message', event.target.value)} rows={4} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-400 focus:bg-white'} /></label>
  <div className={'flex flex-col gap-3 sm:flex-row'}>
  <button data-testid={'inquiry-submit'} type={'submit'} disabled={isPending} className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d] disabled:cursor-not-allowed disabled:opacity-70'}>{isPending ? 'Enviando...' : props.submitLabel}</button>
- <a data-testid={'inquiry-whatsapp-cta'} href={whatsappLink} target={'_blank'} rel={'noopener noreferrer'} className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Consultar por WhatsApp</a>
+ {props.showWhatsAppButton !== false ? <a data-testid={'inquiry-whatsapp-cta'} href={whatsappLink} target={'_blank'} rel={'noopener noreferrer'} className={'inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>Consultar por WhatsApp</a> : null}
  </div>
  </form>
  );
@@ -226,7 +230,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  const submitLabel = isAlertFlow ? 'Avisame si aparece uno similar' : 'Ver precio y cuotas';
  const description = isAlertFlow
  ? 'Dejanos tus datos y te avisamos si se libera este lote o aparece una alternativa similar en este loteo.'
- : 'Completa tus datos para recibir precio, anticipo y plan de cuotas.';
+ : 'Completá tus datos para recibir precio, anticipo y plan de cuotas.';
 
  return (
  <div className={'fixed inset-0 z-[70] flex items-end justify-center bg-slate-950/45 p-0 backdrop-blur-sm md:items-center md:justify-end md:p-6'}>
@@ -242,7 +246,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  <span className={'rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600'}>{lot.street}</span>
  </div>
  </div>
- <button data-testid={'lot-detail-close'} onClick={onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>X</button>
+ <button data-testid={'lot-detail-close'} onClick={onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>×</button>
  </div>
 
  <div className={'rounded-[1.8rem] border border-sky-100 bg-[linear-gradient(180deg,#f7fbff,#ffffff)] p-5 shadow-[0_20px_45px_-36px_rgba(37,99,235,0.28)]'}>
@@ -253,7 +257,7 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  </div>
  <div className={'mt-4 flex flex-col gap-3 rounded-[1.4rem] border border-slate-200 bg-white px-4 py-4 text-sm text-slate-600'}>
  <p>{lot.description}</p>
- {isAlertFlow ? <p className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-amber-900'}>Este lote no esta disponible para cierre inmediato, pero puedes dejar una alerta para seguir una opcion similar.</p> : <p className={'rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-emerald-900'}>Disponible para consulta comercial con precio, anticipo y plan de cuotas.</p>}
+ {isAlertFlow ? <p className={'rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3 text-amber-900'}>Este lote no está disponible para cierre inmediato, pero podés dejar una alerta para seguir una opción similar.</p> : <p className={'rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-emerald-900'}>Disponible para consulta comercial con precio, anticipo y plan de cuotas.</p>}
  </div>
  </div>
 
@@ -261,8 +265,8 @@ export function LotDetailSheet({ development, lot, open, onClose }: { developmen
  <Info label={'Manzana'} value={lot.block} />
  <Info label={'Calle'} value={lot.street} />
  <Info label={'Superficie'} value={formatArea(lot.area)} />
- <Info label={'Orientacion'} value={lot.orientation} />
- <Info label={'Financiacion'} value={lot.financing.available ? 'Si' : 'No'} />
+ <Info label={'Orientación'} value={lot.orientation} />
+ <Info label={'Financiación'} value={lot.financing.available ? 'Sí' : 'No'} />
  <Info label={'Valor cuota'} value={formatCurrency(lot.financing.installmentValue, lot.financing.currency)} />
  </div>
 

@@ -3,10 +3,11 @@
 
 import { ChangeEvent, ReactNode, useEffect, useMemo, useState } from 'react';
 
+import { LeadsTable } from '@/components/admin-ui';
 import { PropertyOperationBadge, PropertyStatusBadge } from '@/components/properties-ui';
 import { useAppData } from '@/components/providers';
 import { formatCurrency, propertyTypeMeta } from '@/lib/format';
-import { Property, PropertyImageInput, PropertyUpsertInput } from '@/types';
+import { Lead, Property, PropertyImageInput, PropertyUpsertInput } from '@/types';
 
 interface PropertyFormState {
  title: string;
@@ -38,7 +39,7 @@ function emptyForm(): PropertyFormState {
  operation: 'alquiler',
  availability: 'disponible',
  location: '',
- province: 'Cordoba',
+ province: 'Córdoba',
  addressOrZone: '',
  shortDescription: '',
  description: '',
@@ -127,7 +128,7 @@ async function readFileAsDataUrl(file: File) {
  });
 }
 
-export function AdminPropertiesPanel() {
+export function AdminPropertiesPanel(props: { leads: Lead[] }) {
  const { properties, createProperty, updateProperty, deleteProperty, showToast } = useAppData();
  const [search, setSearch] = useState('');
  const [operation, setOperation] = useState('all');
@@ -135,6 +136,9 @@ export function AdminPropertiesPanel() {
  const [availability, setAvailability] = useState('all');
  const [editorOpen, setEditorOpen] = useState(false);
  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+ const activeProperties = properties.filter((property) => property.availability === 'disponible').length;
+ const rentalProperties = properties.filter((property) => property.operation === 'alquiler').length;
+ const saleProperties = properties.filter((property) => property.operation === 'venta').length;
 
  const filteredProperties = useMemo(() => {
  return properties.filter((property) => {
@@ -148,7 +152,7 @@ export function AdminPropertiesPanel() {
  }, [availability, operation, properties, search, type]);
 
  async function handleDelete(property: Property) {
- const confirmed = window.confirm('Vas a quitar "' + property.title + '" del catalogo mock. ¿Continuar?');
+ const confirmed = window.confirm('Vas a quitar "' + property.title + '" del catálogo mock. ¿Continuar?');
 
  if (!confirmed) {
  return;
@@ -157,7 +161,7 @@ export function AdminPropertiesPanel() {
  const ok = await deleteProperty(property.id);
 
  if (ok) {
- showToast({ title: 'Propiedad quitada', description: 'La propiedad se removio del catalogo de la sesion actual.', tone: 'success' });
+ showToast({ title: 'Propiedad quitada', description: 'La propiedad se removió del catálogo de la sesión actual.', tone: 'success' });
  } else {
  showToast({ title: 'No pudimos quitar la propiedad', description: 'Intenta nuevamente en unos segundos.', tone: 'error' });
  }
@@ -165,18 +169,43 @@ export function AdminPropertiesPanel() {
 
  return (
  <section data-testid={'admin-properties-view'} className={'space-y-6'}>
- <div className={'grid gap-4 sm:grid-cols-2 xl:grid-cols-4'}>
+ <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-6 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
+ <div className={'grid gap-6 xl:grid-cols-[0.95fr_1.05fr]'}>
+ <div>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Dashboard de propiedades</p>
+ <h2 className={'mt-3 text-3xl font-semibold text-slate-950'}>Alquileres y ventas con carga simple</h2>
+ <p className={'mt-3 text-lg leading-8 text-slate-600'}>Esta sección de la demo muestra cómo cargar propiedades, decidir si se publica el precio, elegir portada y recibir leads por WhatsApp o solicitud de contacto.</p>
+ </div>
+ <div className={'grid gap-3 sm:grid-cols-3'}>
+ <div className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-600'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>1. Publicación</p>
+ <p className={'mt-2'}>Cargá casa, departamento o cabaña con operación, estado, ubicación y descripción comercial.</p>
+ </div>
+ <div className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-600'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>2. Precio opcional</p>
+ <p className={'mt-2'}>Elegí si querés mostrar el valor o dejar “Consultar valor” para una gestión más personalizada.</p>
+ </div>
+ <div className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-600'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>3. Captación</p>
+ <p className={'mt-2'}>Los leads de propiedades quedan separados de los leads de lotes para una lectura comercial más ordenada.</p>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <div className={'grid gap-4 sm:grid-cols-2 xl:grid-cols-5'}>
  <Metric label={'Propiedades'} value={String(properties.length)} tone={'text-slate-950'} surface={'border-slate-200 bg-white'} />
- <Metric label={'Disponibles'} value={String(properties.filter((property) => property.availability === 'disponible').length)} tone={'text-emerald-700'} surface={'border-emerald-100 bg-emerald-50/70'} />
- <Metric label={'Alquiler'} value={String(properties.filter((property) => property.operation === 'alquiler').length)} tone={'text-sky-700'} surface={'border-sky-100 bg-sky-50/70'} />
- <Metric label={'Venta'} value={String(properties.filter((property) => property.operation === 'venta').length)} tone={'text-violet-700'} surface={'border-violet-100 bg-violet-50/70'} />
+ <Metric label={'Disponibles'} value={String(activeProperties)} tone={'text-emerald-700'} surface={'border-emerald-100 bg-emerald-50/70'} />
+ <Metric label={'Alquiler'} value={String(rentalProperties)} tone={'text-sky-700'} surface={'border-sky-100 bg-sky-50/70'} />
+ <Metric label={'Venta'} value={String(saleProperties)} tone={'text-violet-700'} surface={'border-violet-100 bg-violet-50/70'} />
+ <Metric label={'Leads'} value={String(props.leads.length)} tone={'text-amber-700'} surface={'border-amber-100 bg-amber-50/80'} />
  </div>
 
  <section className={'rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.22)]'}>
  <div className={'flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'}>
  <div>
  <h3 className={'text-2xl font-semibold text-slate-950'}>Propiedades</h3>
- <p className={'mt-2 text-sm text-slate-500'}>Administra casas, departamentos y cabanas para alquiler o venta con carga simple de imagenes y precio opcional.</p>
+ <p className={'mt-2 text-sm text-slate-500'}>Administrá casas, departamentos y cabañas para alquiler o venta con carga simple de imágenes y precio opcional.</p>
  </div>
  <button data-testid={'admin-properties-add'} type={'button'} onClick={() => { setEditingProperty(null); setEditorOpen(true); }} className={'inline-flex items-center justify-center rounded-full bg-[#0f4c81] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0b3f6d]'}>
  Agregar propiedad
@@ -184,7 +213,7 @@ export function AdminPropertiesPanel() {
  </div>
 
  <div data-testid={'admin-properties-filters'} className={'mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4'}>
- <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={'Buscar por titulo o ubicacion'} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
+ <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder={'Buscar por título o ubicación'} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  <select value={operation} onChange={(event) => setOperation(event.target.value)} className={'rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'all'}>Alquiler y venta</option>
  <option value={'alquiler'}>Alquiler</option>
@@ -194,7 +223,7 @@ export function AdminPropertiesPanel() {
  <option value={'all'}>Todos los tipos</option>
  <option value={'casa'}>Casa</option>
  <option value={'departamento'}>Departamento</option>
- <option value={'cabana'}>Cabana</option>
+ <option value={'cabana'}>Cabaña</option>
  </select>
  <select value={availability} onChange={(event) => setAvailability(event.target.value)} className={'rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'all'}>Todos los estados</option>
@@ -251,6 +280,13 @@ export function AdminPropertiesPanel() {
  ) : null}
  </section>
 
+ <LeadsTable
+ leads={props.leads}
+ title={'Leads de propiedades'}
+ description={'Consultas originadas desde la grilla, el modal rápido y las solicitudes de contacto del catálogo de propiedades.'}
+ testId={'admin-property-leads-table'}
+ />
+
  <PropertyEditor
  open={editorOpen}
  property={editingProperty}
@@ -259,11 +295,11 @@ export function AdminPropertiesPanel() {
  const created = await createProperty(input);
 
  if (!created) {
- showToast({ title: 'No pudimos guardar la propiedad', description: 'Revisa la carga e intenta nuevamente.', tone: 'error' });
+ showToast({ title: 'No pudimos guardar la propiedad', description: 'Revisá la carga e intentá nuevamente.', tone: 'error' });
  return false;
  }
 
- showToast({ title: 'Propiedad guardada', description: 'La propiedad ya aparece en la seccion publica y en admin.', tone: 'success' });
+ showToast({ title: 'Propiedad guardada', description: 'La propiedad ya aparece en la sección pública y en admin.', tone: 'success' });
  return true;
  }}
  onUpdate={async (propertyId, input) => {
@@ -274,7 +310,7 @@ export function AdminPropertiesPanel() {
  return false;
  }
 
- showToast({ title: 'Propiedad actualizada', description: 'Los cambios ya impactan en el catalogo de esta sesion.', tone: 'success' });
+ showToast({ title: 'Propiedad actualizada', description: 'Los cambios ya impactan en el catálogo de esta sesión.', tone: 'success' });
  return true;
  }}
  onValidationError={(message) => showToast({ title: 'Revisa el formulario', description: message, tone: 'error' })}
@@ -354,7 +390,7 @@ function PropertyEditorBody(props: {
  }
 
  if (form.images.length + files.length > 6) {
- props.onValidationError('La galeria admite hasta 6 imagenes.');
+ props.onValidationError('La galería admite hasta 6 imágenes.');
  event.target.value = '';
  return;
  }
@@ -362,7 +398,7 @@ function PropertyEditorBody(props: {
  const validFiles = files.filter((file) => file.type.startsWith('image/') && file.size <= 900_000);
 
  if (validFiles.length !== files.length) {
- props.onValidationError('Cada imagen debe ser un archivo valido de hasta 900 KB.');
+ props.onValidationError('Cada imagen debe ser un archivo válido de hasta 900 KB.');
  event.target.value = '';
  return;
  }
@@ -386,12 +422,12 @@ function PropertyEditorBody(props: {
 
  async function handleSubmit() {
  if (!form.title.trim() || !form.location.trim() || !form.addressOrZone.trim() || !form.shortDescription.trim() || !form.description.trim() || !form.surfaceM2.trim()) {
- props.onValidationError('Completa titulo, ubicacion, zona, descripciones y superficie.');
+ props.onValidationError('Completá título, ubicación, zona, descripciones y superficie.');
  return;
  }
 
  if (form.images.length === 0) {
- props.onValidationError('Agrega al menos una imagen para la propiedad.');
+ props.onValidationError('Agregá al menos una imagen para la propiedad.');
  return;
  }
 
@@ -414,26 +450,26 @@ function PropertyEditorBody(props: {
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>{props.property ? 'Editar propiedad' : 'Nueva propiedad'}</p>
  <h3 className={'mt-2 text-3xl font-semibold text-slate-950'}>{props.property ? props.property.title : 'Carga comercial de propiedades'}</h3>
  </div>
- <button type={'button'} onClick={props.onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>X</button>
+ <button type={'button'} onClick={props.onClose} className={'inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-lg font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-900'}>×</button>
  </div>
 
  <div className={'grid gap-6 lg:grid-cols-[1.1fr_0.9fr]'}>
  <div className={'space-y-4'}>
  <div className={'grid gap-4 sm:grid-cols-2'}>
- <Field label={'Titulo'}>
+ <Field label={'Título'}>
  <input value={form.title} onChange={(event) => updateField('title', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
- <Field label={'Ubicacion'}>
+ <Field label={'Ubicación'}>
  <input value={form.location} onChange={(event) => updateField('location', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
  <Field label={'Tipo'}>
  <select value={form.type} onChange={(event) => updateField('type', event.target.value as PropertyFormState['type'])} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'casa'}>Casa</option>
  <option value={'departamento'}>Departamento</option>
- <option value={'cabana'}>Cabana</option>
+ <option value={'cabana'}>Cabaña</option>
  </select>
  </Field>
- <Field label={'Operacion'}>
+ <Field label={'Operación'}>
  <select value={form.operation} onChange={(event) => updateField('operation', event.target.value as PropertyFormState['operation'])} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'}>
  <option value={'alquiler'}>Alquiler</option>
  <option value={'venta'}>Venta</option>
@@ -452,29 +488,29 @@ function PropertyEditorBody(props: {
  </Field>
  </div>
 
- <Field label={'Zona / direccion comercial'}>
+ <Field label={'Zona / dirección comercial'}>
  <input value={form.addressOrZone} onChange={(event) => updateField('addressOrZone', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
 
- <Field label={'Descripcion corta'}>
+ <Field label={'Descripción corta'}>
  <textarea rows={3} value={form.shortDescription} onChange={(event) => updateField('shortDescription', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
 
- <Field label={'Descripcion completa'}>
+ <Field label={'Descripción completa'}>
  <textarea rows={5} value={form.description} onChange={(event) => updateField('description', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
 
  <div className={'grid gap-4 sm:grid-cols-2 xl:grid-cols-4'}>
- <Field label={'m2 terreno'}>
+ <Field label={'m² terreno'}>
  <input type={'number'} value={form.surfaceM2} onChange={(event) => updateField('surfaceM2', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
- <Field label={'m2 cubiertos'}>
+ <Field label={'m² cubiertos'}>
  <input type={'number'} value={form.coveredM2} onChange={(event) => updateField('coveredM2', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
  <Field label={'Dormitorios'}>
  <input type={'number'} value={form.bedrooms} onChange={(event) => updateField('bedrooms', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
- <Field label={'Banos'}>
+ <Field label={'Baños'}>
  <input type={'number'} value={form.bathrooms} onChange={(event) => updateField('bathrooms', event.target.value)} className={'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900'} />
  </Field>
  </div>
@@ -512,11 +548,11 @@ function PropertyEditorBody(props: {
 
  <div className={'space-y-4'}>
  <div className={'rounded-[1.8rem] border border-slate-200 bg-slate-50 p-5'}>
- <p className={'text-sm font-semibold text-slate-900'}>Mini galeria</p>
- <p className={'mt-2 text-sm leading-6 text-slate-500'}>Carga hasta 6 imagenes. Puedes elegir una portada para la ficha publica y el modal rapido.</p>
+ <p className={'text-sm font-semibold text-slate-900'}>Mini galería</p>
+ <p className={'mt-2 text-sm leading-6 text-slate-500'}>Cargá hasta 6 imágenes. Podés elegir una portada para la ficha pública y el modal rápido.</p>
  <label className={'mt-4 inline-flex cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950'}>
  <input data-testid={'admin-property-image-upload'} type={'file'} accept={'image/*'} multiple className={'hidden'} onChange={(event) => void handleFiles(event)} />
- Cargar imagenes
+ Cargar imágenes
  </label>
  </div>
 
@@ -546,18 +582,18 @@ function PropertyEditorBody(props: {
 
  {form.images.length === 0 ? (
  <div className={'rounded-[1.6rem] border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500'}>
- Aun no cargaste imagenes para esta propiedad.
+ Aún no cargaste imágenes para esta propiedad.
  </div>
  ) : null}
 
  <div className={'rounded-[1.8rem] border border-sky-100 bg-[linear-gradient(180deg,#f7fbff,#ffffff)] p-5 shadow-[0_20px_45px_-36px_rgba(37,99,235,0.28)]'}>
  <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-slate-400'}>Preview comercial</p>
- <h4 className={'mt-2 text-xl font-semibold text-slate-950'}>{form.title || 'Titulo de la propiedad'}</h4>
- <p className={'mt-2 text-sm text-slate-500'}>{form.addressOrZone || 'Zona'} - {form.location || 'Ubicacion'}</p>
+ <h4 className={'mt-2 text-xl font-semibold text-slate-950'}>{form.title || 'Título de la propiedad'}</h4>
+ <p className={'mt-2 text-sm text-slate-500'}>{form.addressOrZone || 'Zona'} - {form.location || 'Ubicación'}</p>
  <p className={'mt-4 text-lg font-semibold text-slate-950'}>
  {form.showPrice && form.price ? formatCurrency(Number(form.price), form.currency) : 'Consultar valor'}
  </p>
- <p className={'mt-3 text-sm leading-6 text-slate-600'}>{form.shortDescription || 'La descripcion corta aparece aqui para validar rapidamente la ficha.'}</p>
+ <p className={'mt-3 text-sm leading-6 text-slate-600'}>{form.shortDescription || 'La descripción corta aparece aquí para validar rápidamente la ficha.'}</p>
  </div>
  </div>
  </div>

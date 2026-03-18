@@ -54,9 +54,9 @@ export function PropertiesPage() {
  <section className={'rounded-[2.2rem] border border-white/80 bg-[radial-gradient(circle_at_top_left,rgba(15,76,129,0.1),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.12),transparent_28%),linear-gradient(145deg,#ffffff,#f5f9fd)] px-6 py-8 shadow-[0_30px_70px_-48px_rgba(15,23,42,0.28)] sm:px-8'}>
  <div className={'grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-end'}>
  <div>
- <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Nueva vertical comercial</p>
+ <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-sky-700'}>Demo comercial de propiedades</p>
  <h1 className={'mt-3 text-4xl font-semibold text-slate-950 sm:text-5xl'}>Propiedades para alquiler y venta</h1>
- <p className={'mt-4 max-w-3xl text-lg leading-8 text-slate-600'}>Una seccion separada para casas, departamentos y cabanas con lectura comercial clara, estado visible, mini ficha y consulta inmediata por WhatsApp.</p>
+ <p className={'mt-4 max-w-3xl text-lg leading-8 text-slate-600'}>Esta demo muestra cómo podría verse tu catálogo de casas, departamentos y cabañas con grilla clara, ficha rápida, precio opcional y contacto inmediato por WhatsApp o solicitud de contacto.</p>
  </div>
  <div className={'grid gap-3 sm:grid-cols-3'}>
  <div className={'rounded-[1.6rem] border border-white/90 bg-white/90 p-4 shadow-[0_20px_45px_-36px_rgba(15,23,42,0.2)]'}>
@@ -73,6 +73,24 @@ export function PropertiesPage() {
  </div>
  </div>
  </div>
+ </section>
+
+ <section data-testid={'properties-demo-guide'} className={'grid gap-4 rounded-[2rem] border border-slate-200/80 bg-white p-5 shadow-[0_24px_60px_-42px_rgba(15,23,42,0.18)] lg:grid-cols-3'}>
+ <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>1. Explorá</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Filtrá con lectura simple</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>Buscá por ubicación, operación o tipo para mostrar rápido alquileres y ventas según la necesidad del cliente.</p>
+ </article>
+ <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>2. Presentá</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Abrí una ficha clara y comercial</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>Cada propiedad tiene galería, superficie, estado y precio visible u oculto según cómo quieras mostrar la publicación.</p>
+ </article>
+ <article className={'rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4'}>
+ <p className={'text-xs font-semibold uppercase tracking-[0.18em] text-sky-700'}>3. Convertí</p>
+ <h2 className={'mt-2 text-lg font-semibold text-slate-950'}>Dejá dos caminos de contacto</h2>
+ <p className={'mt-2 text-sm leading-7 text-slate-600'}>El interesado puede escribir por WhatsApp o pedir contacto para que el equipo responda por llamada, email o mensaje.</p>
+ </article>
  </section>
 
  <PropertyFilters
@@ -98,10 +116,10 @@ export function PropertiesPage() {
  <div>
  <p className={'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400'}>Sin coincidencias</p>
  <h2 className={'mt-3 text-2xl font-semibold text-slate-950'}>No encontramos propiedades con esos filtros.</h2>
- <p className={'mt-3 text-sm leading-7 text-slate-600'}>Dejanos tus datos y te ayudamos a encontrar una opcion similar para alquiler o venta.</p>
+ <p className={'mt-3 text-sm leading-7 text-slate-600'}>Dejanos tus datos y te ayudamos a encontrar una opción similar para alquiler o venta.</p>
  </div>
  <div className={'rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5'}>
- <InquiryForm source={'contacto'} submitLabel={'Quiero ayuda con una propiedad'} description={'Te respondemos con opciones similares y seguimiento comercial simple por WhatsApp o email.'} />
+ <InquiryForm source={'propiedad'} submitLabel={'Quiero ayuda con una propiedad'} description={'Te respondemos con opciones similares y seguimiento comercial simple por WhatsApp, llamada o email.'} />
  </div>
  </section>
  ) : null}
