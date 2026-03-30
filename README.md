@@ -1,5 +1,9 @@
 # Inmobiliaria Lotes Mock
 
+## Documentación técnica
+
+La documentación técnica detallada del proyecto está en [DOCUMENTACION_TECNICA.md](/C:/Users/santi/OneDrive/Documentos/Inmobiliaria/DOCUMENTACION_TECNICA.md).
+
 ## Deploy en Netlify
 
 Este proyecto usa Next.js y esta preparado para desplegarse en Netlify con el runtime/plugin de Next.js.
