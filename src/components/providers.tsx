@@ -2,8 +2,8 @@
 
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 
-import { mockDevelopments, mockLeads } from '@/data/mock-data';
-import { Development, Lead, LeadInput, Lot } from '@/types';
+import { mockDevelopments, mockLeads, mockProperties } from '@/data/mock-data';
+import { Development, Lead, LeadInput, Lot, Property, PropertyImage, PropertyImageInput, PropertyUpsertInput, PropertyUpdateInput } from '@/types';
 
 type ToastTone = 'success' | 'error';
 
@@ -27,16 +27,22 @@ interface LotPatch {
 
 interface ProvidersProps extends PropsWithChildren {
  initialDevelopments?: Development[];
+ initialProperties?: Property[];
  initialLeads?: Lead[];
 }
 
 interface AppDataContextValue {
  developments: Development[];
+ properties: Property[];
  leads: Lead[];
  showToast: (toast: ToastState) => void;
  getDevelopmentBySlug: (slug: string) => Development | undefined;
+ getPropertyBySlug: (slug: string) => Property | undefined;
  submitLead: (input: LeadInput, meta?: LeadSubmissionMeta) => void;
  updateLot: (developmentSlug: string, lotCode: string, patch: LotPatch) => void;
+ createProperty: (input: PropertyUpsertInput) => Promise<Property | null>;
+ updateProperty: (propertyId: string, patch: PropertyUpdateInput) => Promise<Property | null>;
+ deleteProperty: (propertyId: string) => Promise<boolean>;
 }
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
@@ -63,15 +69,21 @@ function buildOptimisticLead(input: LeadInput, currentLength: number): Lead {
 export function Providers({
  children,
  initialDevelopments = mockDevelopments,
+ initialProperties = mockProperties,
  initialLeads = mockLeads,
 }: ProvidersProps) {
  const [developments, setDevelopments] = useState(initialDevelopments);
+ const [properties, setProperties] = useState(initialProperties);
  const [leads, setLeads] = useState(initialLeads);
  const [toast, setToast] = useState<ToastState | null>(null);
 
  useEffect(() => {
  setDevelopments(initialDevelopments);
  }, [initialDevelopments]);
+
+ useEffect(() => {
+ setProperties(initialProperties);
+ }, [initialProperties]);
 
  useEffect(() => {
  setLeads(initialLeads);
@@ -170,13 +182,158 @@ export function Providers({
  });
  };
 
+ const createProperty = async (input: PropertyUpsertInput) => {
+ const optimisticId = globalThis.crypto?.randomUUID?.() || 'property-' + Date.now();
+ const optimisticImages: PropertyImage[] = input.images.map((image: PropertyImageInput, index) => ({
+ id: image.id || optimisticId + '-image-' + (index + 1),
+ url: image.url,
+ alt: image.alt || input.title,
+ isCover: Boolean(image.isCover),
+ }));
+ const coverIndex = optimisticImages.findIndex((image) => image.isCover);
+ const normalizedImages = optimisticImages.length > 0
+ ? optimisticImages.map((image, index) => ({ ...image, isCover: index === (coverIndex >= 0 ? coverIndex : 0) }))
+ : [];
+ const optimisticProperty: Property = {
+ id: optimisticId,
+ slug: input.slug || input.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
+ title: input.title,
+ type: input.type,
+ operation: input.operation,
+ availability: input.availability,
+ location: input.location,
+ province: input.province,
+ addressOrZone: input.addressOrZone,
+ shortDescription: input.shortDescription,
+ description: input.description,
+ surfaceM2: input.surfaceM2,
+ ...(typeof input.coveredM2 === 'number' ? { coveredM2: input.coveredM2 } : {}),
+ ...(typeof input.bedrooms === 'number' ? { bedrooms: input.bedrooms } : {}),
+ ...(typeof input.bathrooms === 'number' ? { bathrooms: input.bathrooms } : {}),
+ ...(typeof input.parking === 'boolean' ? { parking: input.parking } : {}),
+ ...(typeof input.price === 'number' ? { price: input.price } : {}),
+ ...(input.currency ? { currency: input.currency } : {}),
+ showPrice: input.showPrice,
+ featured: input.featured,
+ images: normalizedImages,
+ ...(input.whatsappMessage ? { whatsappMessage: input.whatsappMessage } : {}),
+ };
+
+ setProperties((current) => [optimisticProperty, ...current]);
+
+ try {
+ const response = await fetch('/api/admin/properties', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ credentials: 'same-origin',
+ body: JSON.stringify(input),
+ });
+
+ if (!response.ok) {
+ throw new Error(await response.text());
+ }
+
+ const payload = (await response.json()) as { data: Property };
+ setProperties((current) => current.map((property) => (property.id === optimisticId ? payload.data : property)));
+ return payload.data;
+ } catch (error) {
+ setProperties((current) => current.filter((property) => property.id !== optimisticId));
+ console.error('No se pudo crear la propiedad', error);
+ return null;
+ }
+ };
+
+ const updateProperty = async (propertyId: string, patch: PropertyUpdateInput) => {
+ const previousProperty = properties.find((property) => property.id === propertyId);
+
+ if (!previousProperty) {
+ return null;
+ }
+
+ const nextImages: PropertyImage[] = patch.images
+ ? patch.images.map((image, index) => ({
+ id: image.id || previousProperty.id + '-image-' + (index + 1),
+ url: image.url,
+ alt: image.alt || patch.title || previousProperty.title,
+ isCover: Boolean(image.isCover),
+ }))
+ : previousProperty.images;
+
+ const coverIndex = nextImages.findIndex((image) => image.isCover);
+ const normalizedImages = nextImages.length > 0
+ ? nextImages.map((image, index) => ({ ...image, isCover: index === (coverIndex >= 0 ? coverIndex : 0) }))
+ : [];
+ const restPatch: Omit<PropertyUpdateInput, 'images'> = { ...patch };
+
+ const optimisticProperty: Property = {
+ ...previousProperty,
+ ...restPatch,
+ ...(patch.images ? { images: normalizedImages } : {}),
+ };
+
+ setProperties((current) => current.map((property) => (property.id === propertyId ? optimisticProperty : property)));
+
+ try {
+ const response = await fetch('/api/admin/properties/' + encodeURIComponent(propertyId), {
+ method: 'PATCH',
+ headers: { 'Content-Type': 'application/json' },
+ credentials: 'same-origin',
+ body: JSON.stringify(patch),
+ });
+
+ if (!response.ok) {
+ throw new Error(await response.text());
+ }
+
+ const payload = (await response.json()) as { data: Property };
+ setProperties((current) => current.map((property) => (property.id === propertyId ? payload.data : property)));
+ return payload.data;
+ } catch (error) {
+ setProperties((current) => current.map((property) => (property.id === propertyId ? previousProperty : property)));
+ console.error('No se pudo actualizar la propiedad', error);
+ return null;
+ }
+ };
+
+ const deleteProperty = async (propertyId: string) => {
+ const previousProperty = properties.find((property) => property.id === propertyId);
+
+ if (!previousProperty) {
+ return false;
+ }
+
+ setProperties((current) => current.filter((property) => property.id !== propertyId));
+
+ try {
+ const response = await fetch('/api/admin/properties/' + encodeURIComponent(propertyId), {
+ method: 'DELETE',
+ credentials: 'same-origin',
+ });
+
+ if (!response.ok) {
+ throw new Error(await response.text());
+ }
+
+ return true;
+ } catch (error) {
+ setProperties((current) => [previousProperty, ...current]);
+ console.error('No se pudo eliminar la propiedad', error);
+ return false;
+ }
+ };
+
  const value: AppDataContextValue = {
  developments,
+ properties,
  leads,
  showToast,
  getDevelopmentBySlug: (slug) => developments.find((development) => development.slug === slug),
+ getPropertyBySlug: (slug) => properties.find((property) => property.slug === slug),
  submitLead,
  updateLot,
+ createProperty,
+ updateProperty,
+ deleteProperty,
  };
 
  return (

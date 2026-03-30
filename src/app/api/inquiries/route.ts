@@ -15,20 +15,24 @@ import { LeadInput, LeadSource } from '@/types';
 export const dynamic = 'force-dynamic';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const allowedSources: LeadSource[] = ['lote', 'contacto', 'alerta'];
+const allowedSources: LeadSource[] = ['lote', 'contacto', 'alerta', 'propiedad'];
 
 interface InquiryPayload extends Partial<LeadInput> {
  company?: string;
  startedAt?: number | string;
 }
 
-function buildDefaultMessage(source: LeadSource, lotLabel?: string) {
+function buildDefaultMessage(source: LeadSource, lotLabel?: string, propertyLabel?: string) {
  if (source === 'alerta') {
  return lotLabel ? 'Quiero recibir una alerta si vuelve a aparecer ' + lotLabel + ' o un lote similar.' : 'Quiero recibir alertas cuando aparezcan lotes similares.';
  }
 
  if (source === 'lote' && lotLabel) {
  return 'Quiero recibir precio, anticipo y cuotas de ' + lotLabel + '.';
+ }
+
+ if (source === 'propiedad' && propertyLabel) {
+ return 'Quiero recibir mas informacion y coordinar una visita para ' + propertyLabel + '.';
  }
 
  return 'Quiero recibir mas informacion comercial.';
@@ -71,7 +75,8 @@ export async function POST(request: NextRequest) {
  const email = normalizeEmail(body.email, 120);
  const source = allowedSources.includes(body.source as LeadSource) ? (body.source as LeadSource) : undefined;
  const lotLabel = normalizeOptionalString(body.lotLabel, 80);
- const message = normalizeOptionalString(body.message, 1200) || (source ? buildDefaultMessage(source, lotLabel) : '');
+ const propertyLabel = normalizeOptionalString(body.propertyLabel, 120);
+ const message = normalizeOptionalString(body.message, 1200) || (source ? buildDefaultMessage(source, lotLabel, propertyLabel) : '');
 
  if (!name || !phone || !email || !source || !emailPattern.test(email)) {
  return jsonNoStore({ error: 'Revisa nombre, telefono y email antes de enviar la consulta.' }, { status: 400 });
@@ -82,6 +87,9 @@ export async function POST(request: NextRequest) {
  lotId: normalizeOptionalString(body.lotId, 120),
  lotCode: normalizeOptionalString(body.lotCode, 120),
  lotLabel,
+ propertyId: normalizeOptionalString(body.propertyId, 120),
+ propertySlug: normalizeOptionalString(body.propertySlug, 120),
+ propertyLabel,
  name,
  phone,
  email,
